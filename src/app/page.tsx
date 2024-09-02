@@ -1,10 +1,16 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useAccount } from "wagmi";
+import Header from "@/components/front/Header";
 
 export default function Home() {
+  const { isConnected } = useAccount();
+
   return (
-    <main className="text-red-400">
-      <ConnectButton />
-    </main>
+    <>
+      <Header />
+    </>
   );
 }
