@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-tertiary-7">
-      <body className={`${inter.className} font-poppins`}>
+      <body className={`${inter.className} font-poppins `}>
         <Providers>{children}</Providers>
       </body>
     </html>

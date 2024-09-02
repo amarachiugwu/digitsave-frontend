@@ -14,7 +14,10 @@ const FAQ: React.FC<FaqProps> = ({ question, answer, isOpen, onToggle }) => {
       <div className="border p-6 text-neutral-3 rounded-lg">
         <div className="flex justify-between item-center">
           <p className="font-medium sm:text-xl text-base">{question}</p>
-          <span className="cursor-pointer" onClick={() => onToggle()}>
+          <span
+            className="cursor-pointer hover:bg-white rounded-full transition-all duration-300 ease-in-out"
+            onClick={() => onToggle()}
+          >
             <PlusIcon />
           </span>
         </div>
