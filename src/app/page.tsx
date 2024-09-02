@@ -14,6 +14,7 @@ import {
   SecurityIcon,
   WalletIcon,
 } from "@/icon";
+import FaqData from "@/components/front/FaqData";
 
 export default function Home() {
   return (
@@ -299,6 +300,17 @@ export default function Home() {
               Get Started
             </Link>
           </div>
+        </div>
+
+        {/* FAQ */}
+        <div
+          id="faq"
+          className="md:w-[70%] w-[100%] px-6 sm:px-10 md:px-0 mx-auto pt-24 text-neutral-2 "
+        >
+          <h2 className="font-bold md:text-4xl sm:text-xl text-center leading-loose py-4">
+            We answered all your money questions
+          </h2>
+          <FaqData />
         </div>
       </main>
     </>
