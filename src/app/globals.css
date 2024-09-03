@@ -107,3 +107,23 @@ Swiss721 Ex BT font
   font-style: normal;
 }
 
+/* For WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 18px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #2B2B2B; /* Background of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #666; /* Background of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners */
+  border: 3px solid #666; /* Space around thumb */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #666 #2B2B2B;
+}

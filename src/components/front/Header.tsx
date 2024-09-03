@@ -48,15 +48,12 @@ export default function Header() {
           {/* desktop nav */}
           <nav className="hidden lg:flex gap-12 items-center">
             <ul className="flex gap-8 text-neutral-3">
-              <ScrollLink
-                to="/learn"
-                spy={true}
-                smooth={true}
-                duration={500}
+              <Link
+                href="/learn"
                 className="cursor-pointer hover:text-white transition-colors duration-300"
               >
                 Learn
-              </ScrollLink>
+              </Link>
 
               <ScrollLink
                 to="faq"
@@ -122,15 +119,12 @@ export default function Header() {
               className={`lg:hidden z-50 top-20 fixed overflow-hidden right-0 flex-col gap-4 items-left bg-tertiary-0 w-full px-6 py-6 `}
             >
               <ul className="flex z-50 flex-col gap-2 text-neutral-3">
-                <ScrollLink
-                  to="/learn"
-                  spy={true}
-                  smooth={true}
-                  duration={500}
+                <Link
+                  href="/learn"
                   className="cursor-pointer hover:text-white hover:bg-[#2B2B2B4D] py-4 px-4 transition-colors duration-300"
                 >
                   Learn
-                </ScrollLink>
+                </Link>
 
                 <ScrollLink
                   to="faq"

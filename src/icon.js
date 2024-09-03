@@ -152,6 +152,15 @@ export const RoadMapDashedLineMobile = () => {
   );
 };
 
+export const RoadMapDashedLineLast = () => {
+  return (
+    <svg width="4" height="283" viewBox="0 0 4 283" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 0L1.99999 283" stroke="#6B6B6B" stroke-width="3" stroke-dasharray="12 12"/>
+    </svg>
+    
+  );
+};
+
 export const SecurityIcon = () => {
   return (
     <svg

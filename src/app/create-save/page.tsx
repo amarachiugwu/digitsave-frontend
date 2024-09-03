@@ -1,3 +1,4 @@
+"use client";
 import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
 import { BackArrowIcon } from "@/icon";
