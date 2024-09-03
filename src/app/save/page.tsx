@@ -40,8 +40,8 @@ export default function Save() {
   const [loading, setLoading] = useState(true);
   const [nextSavingId, setNextSavingId] = useState<number | null>(null);
   const provider = getEthersProvider(config);
- 
- 
+  const [navOpen, setNavOpen] = useState(false);
+
   // fetch users contract >> savings account
   const {
     data: savingsAcct,
@@ -140,7 +140,7 @@ export default function Save() {
 
   return (
     <main className="text-neutral-2">
-      <Header />
+      <Header navOpen={navOpen} setNavOpen={setNavOpen} />
       <section className="flex min-h-screen border-t border-tertiary-6">
         <div className="w-1/5">
           <div className="w-1/5 fixed">
@@ -283,32 +283,44 @@ export default function Save() {
                         </thead>
                         <tbody>
                           {loading && <SavingListLoader />}
-                          
+
                           {savings.map((saving, index) => (
                             <tr
                               key={index}
                               className="hover:bg-tertiary-4 transition-all ease-in-out py-[23px]"
                             >
                               <td className="border-b border-tertiary-5 text-center">
-                                <Link href={`/view-save?id=${saving.id}`} className="inline-block px-2 py-[23px] w-full">
+                                <Link
+                                  href={`/view-save?id=${saving.id}`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
                                   #{index + 1}
                                 </Link>
                               </td>
 
                               <td className="border-b border-tertiary-5 text-center">
-                                <Link href={`/view-save?id=${saving.id}`} className="inline-block px-2 py-[23px] w-full">
+                                <Link
+                                  href={`/view-save?id=${saving.id}`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
                                   {ethers.utils.parseBytes32String(saving.name)}
                                 </Link>
                               </td>
 
                               <td className="border-b border-tertiary-5 text-center">
-                                <Link href={`/view-save?id=${saving.id}`} className="inline-block px-2 py-[23px] w-full">
+                                <Link
+                                  href={`/view-save?id=${saving.id}`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
                                   {toFormattedDate(saving.date)}
                                 </Link>
                               </td>
 
                               <td className="border-b border-tertiary-5 text-center">
-                                <Link href={`/view-save?id=${saving.id}`} className="inline-block px-2 py-[23px] w-full">
+                                <Link
+                                  href={`/view-save?id=${saving.id}`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
                                   $
                                   <NumericFormat
                                     thousandSeparator
@@ -325,13 +337,19 @@ export default function Save() {
                               </td>
 
                               <td className="border-b border-tertiary-5 text-center">
-                                <Link href={`/view-save?id=${saving.id}`} className="inline-block px-2 py-[23px] w-full">
+                                <Link
+                                  href={`/view-save?id=${saving.id}`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
                                   Fixed
                                 </Link>
                               </td>
 
                               <td className="border-b border-tertiary-5 text-center">
-                                <Link href={`/view-save?id=${saving.id}`} className="inline-block px-2 py-[23px] w-full">
+                                <Link
+                                  href={`/view-save?id=${saving.id}`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
                                   {toRelativeTime(saving.lockPeriod)}
                                 </Link>
                               </td>

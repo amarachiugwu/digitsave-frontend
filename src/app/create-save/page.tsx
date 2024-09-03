@@ -3,11 +3,14 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import { BackArrowIcon } from "@/icon";
 import Link from "next/link";
 import CreateSaveForm from "@/components/dashboard/CreateSaveForm";
+import { useState } from "react";
 
 export default function CreateSave() {
+  const [navOpen, setNavOpen] = useState(false);
+
   return (
     <main className="text-neutral-2">
-      <Header />
+      <Header navOpen={navOpen} setNavOpen={setNavOpen} />
       <section className="flex min-h-screen border-t border-tertiary-6">
         <div className="w-1/5">
           <div className="w-1/5 fixed">
