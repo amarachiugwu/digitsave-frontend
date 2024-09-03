@@ -16,6 +16,7 @@ import {
 } from "@/icon";
 import FaqData from "@/components/front/FaqData";
 import Footer from "@/components/front/Footer";
+import Roadmap from "@/components/front/Roadmap";
 
 export default function Home() {
   return (
@@ -100,7 +101,7 @@ export default function Home() {
         <div className="sm:px-20 px-6 flex w-full gap-24 pt-24 items-center bg-[url('/images/how-to-bg.png')]">
           <div className="lg:w-1/2 w-full font-swiss">
             <h2 className="font-bold text-neutral-2 text-3xl text-center md:text-left leading-relaxed">
-              Its only takes 5 minutes...
+              It only takes 5 minutes...
             </h2>
 
             <div className="flex flex-col gap-10 sm:gap-0 w-full text-neutral-3 my-14">
@@ -284,6 +285,17 @@ export default function Home() {
               Get Started
             </Link>
           </div>
+        </div>
+
+        {/* Roadmap */}
+        <div
+          id="roadmap"
+          className="md:w-[80%] w-[100%] px-6 sm:px-10 md:px-0 mx-auto pt-24 text-neutral-2 "
+        >
+          <h2 className="font-bold text-2xl md:text-4xl sm:text-xl text-center font-swiss leading-loose py-4">
+            Roadmap
+          </h2>
+          <Roadmap />
         </div>
 
         {/* FAQ */}
