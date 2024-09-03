@@ -1,5 +1,9 @@
 // Roadmap.tsx
-import { RoadMapDashedLine, RoadMapDashedLineMobile } from "@/icon";
+import {
+  RoadMapDashedLine,
+  RoadMapDashedLineLast,
+  RoadMapDashedLineMobile,
+} from "@/icon";
 import React from "react";
 
 interface RoadmapItem {
@@ -113,9 +117,25 @@ const Roadmap: React.FC = () => {
                 </svg>
               )}
 
-              <div className="hidden md:block">
+              <div className={`hidden md:block `}>
                 <RoadMapDashedLine />
               </div>
+
+              {/* <div
+                className={`hidden  ${
+                  index !== roadmapData.length - 1 ? "md:block" : "hidden"
+                }`}
+              >
+                <RoadMapDashedLine />
+              </div>
+
+              <div
+                className={`hidden  ${
+                  index === roadmapData.length - 1 ? "hidden" : "md:block"
+                }`}
+              > 
+                <RoadMapDashedLineLast />
+              </div>*/}
 
               <div className=" md:hidden">
                 <RoadMapDashedLineMobile />
