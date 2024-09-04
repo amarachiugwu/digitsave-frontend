@@ -99,7 +99,7 @@ const Assets: React.FC = () => {
 
   const renderAsset = (asset: Asset, index: number) => {
     if (!asset.isActive || !assetsDetails || !chainId) return null;
-
+    //@ts-ignore
     const assetDetail = assetsDetails[chainId]?.[asset.assetAddress];
     if (!assetDetail) return null;
 
