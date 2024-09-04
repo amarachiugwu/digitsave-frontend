@@ -103,24 +103,23 @@ export default function Dashboard() {
                   provider
                 );
 
-                const filter = {
-                  address: savingsAcct,
-                  // topics: [
-                  //   ethers.utils.id("SavingCreated(uint256,uint256)"),
-                  //   ethers.utils.hexZeroPad(ethers.utils.hexlify(i), 32),
-                  // ],
-                  topics: [
-                    web3.utils.keccak256("SavingCreated(uint256,uint256)"),
-                    web3.utils.padLeft(web3.utils.toHex(i), 64),
-                  ],
-                  fromBlock: 13767310,
-                  toBlock: 13767310,
-                };
+                // const filter = {
+                //   address: savingsAcct,
+                //   topics: [
+                //     ethers.utils.id("SavingCreated(uint256,uint256)"),
+                //     ethers.utils.hexZeroPad(ethers.utils.hexlify(i), 32),
+                //   ],
+                //   fromBlock: 13767310,
+                //   toBlock: 13767310,
+                // };
 
-                console.log(filter);
-                const [savingData, savingEvent] = await Promise.all([
+                // console.log(filter);
+                const [
+                  savingData,
+                  // savingEvent
+                ] = await Promise.all([
                   contract.savings(i),
-                  provider?.getLogs(filter),
+                  // provider?.getLogs(filter),
                 ]);
 
                 return {
@@ -131,9 +130,9 @@ export default function Dashboard() {
                   totalAssetLocked: savingData.totalAssetLocked.toString(),
                   lockPeriod: savingData.lockPeriod,
                   isCompleted: savingData.isCompleted,
+                  date: 1725412179,
                   name: savingData.name,
                   // eventLog: savingEvent,
-                  date: 1725412179,
                 };
               })()
             );
@@ -244,7 +243,7 @@ export default function Dashboard() {
                 <div className="w-3/5 flex flex-col gap-4">
                   <p className="font-semibold">Recent activities</p>
 
-                  <div className="w-full flex flex-col rounded-lg bg-tertiary-6 min-h-[350px]">
+                  <div className="w-full flex flex-col overflow-scroll rounded-lg bg-tertiary-6 h-[350px]">
                     {fetching && <ActivityLoader />}
 
                     {!activitiesData && !fetching && (
@@ -283,8 +282,8 @@ export default function Dashboard() {
                     {savings.reverse().map((saving, index) => (
                       <div key={index} className="text-sm p-6">
                         <div className="flex flex-col gap-6">
-                          <div className="flex gap-8 justify-between items-center">
-                            <div className="flex gap-4">
+                          <div className="flex gap-4 justify-between items-center">
+                            <div className="flex flex-grow gap-4">
                               <WalletIconPlain />
                               <div className="flex flex-col gap-1 ">
                                 <p>
@@ -303,31 +302,28 @@ export default function Dashboard() {
                               </div>
                             </div>
 
-                            <div className="flex gap-2 py-1 px-3 items-center bg-tertiary-7 rounded-xl">
+                            <div className="flex flex-grow gap-2 py-1 px-3 items-center bg-tertiary-7 rounded-xl">
                               <Circle />
                               <p>Successful</p>
                             </div>
 
                             <Link
-                              href={`/view-save?id=${saving.id}`}
-                              className="block"
+                              href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
+                              className="block flex-grow "
                             >
                               manage
                             </Link>
 
-                            {
-                              // saving.eventLog[0] &&
-                              <p>
-                                {/* {toFormattedDate(
+                            {saving.date && (
+                              <p className="flex-grow ">
+                                {toFormattedDate(
                                   parseInt(
-                                    `${ethers.BigNumber.from(
-                                      saving.eventLog[0].topics[2]
-                                    )}`
+                                    `${ethers.BigNumber.from(saving.date)}`
                                   )
-                                )} */}
-                                {toFormattedDate(saving.date)}
+                                )}
+                                {/* {toFormattedDate(saving.date)} */}
                               </p>
-                            }
+                            )}
                           </div>
                         </div>
                       </div>
@@ -361,6 +357,8 @@ export default function Dashboard() {
                                   process.env.NODE_ENV === "development"
                                     ? "sepolia.basescan.org"
                                     : process.env.NODE_ENV === "production"
+                                    ? "basescan.org"
+                                    : "sepolia.basescan.org"
                                     ? "basescan.org"
                                     : "sepolia.basescan.org"
                                 }/address/${

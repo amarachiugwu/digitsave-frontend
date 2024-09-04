@@ -293,7 +293,7 @@ export default function Save() {
                             >
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`/view-save?id=${saving.id}`}
+                                  href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   #{index + 1}
@@ -302,7 +302,7 @@ export default function Save() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`/view-save?id=${saving.id}`}
+                                  href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   {/* {ethers.utils.parseBytes32String(saving.name)} */}
@@ -312,7 +312,7 @@ export default function Save() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`/view-save?id=${saving.id}`}
+                                  href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   {toFormattedDate(saving.date)}
@@ -321,7 +321,7 @@ export default function Save() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`/view-save?id=${saving.id}`}
+                                  href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   $
@@ -344,7 +344,7 @@ export default function Save() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`/view-save?id=${saving.id}`}
+                                  href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   Fixed
@@ -353,7 +353,7 @@ export default function Save() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`/view-save?id=${saving.id}`}
+                                  href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   {toRelativeTime(saving.lockPeriod)}

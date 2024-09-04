@@ -4,10 +4,29 @@ import Link from "next/link";
 import { CloseIcon, HamburgerIcon } from "../../icon.js";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+import { useAccount } from "wagmi";
+import { useAccountEffect } from 'wagmi'
+
+
 import Image from "next/image.js";
 
 export default function Header({ navOpen, setNavOpen }) {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();  
+  // const { isDisconnected } = useAccount();
+
+  // useEffect(() => {
+  //   if (isDisconnected) {
+  //     router.push('/');
+  //   }
+  // }, [isDisconnected, router]);
+
+  useAccountEffect({
+    onDisconnect() {
+      router.push('/');
+    },
+  })
 
   useEffect(() => {
     const handleScroll = () => {
