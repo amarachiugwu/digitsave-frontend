@@ -953,16 +953,11 @@ export const NoOfAssetsIcon = () => {
 
 export const ClockIcon = () => {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M8 1V15" stroke="#FFEF99" strokeLinecap="round" />
-      <path d="M1 8H15" stroke="#FFEF99" strokeLinecap="round" />
-    </svg>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z" stroke="white" stroke-width="1.5"/>
+<path d="M10.5 8.99999H7.19444C7.14287 8.99999 7.09342 8.97951 7.05695 8.94304C7.02049 8.90658 7 8.85712 7 8.80555V6.27777" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+
   );
 };
 

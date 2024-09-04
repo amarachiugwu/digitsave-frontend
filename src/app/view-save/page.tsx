@@ -24,6 +24,7 @@ import { toRelativeTime } from "@/utils/dateFormat";
 import ProgressBar from "@/components/dashboard/ProgressBar";
 import OverlayLoader from "@/components/dashboard/Loaders/OverlayLoader";
 import AddAssetModal from "@/components/dashboard/AddAssetModal";
+import Web3 from "web3";
 
 type Save = {
   id: number;
@@ -48,6 +49,7 @@ export default function ViewSave() {
   const [navOpen, setNavOpen] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+  const web3 = new Web3();
 
   // fetch users contract >> savings account
   const {
@@ -89,7 +91,7 @@ export default function ViewSave() {
                 lockPeriod: savingData.lockPeriod,
                 isCompleted: savingData.isCompleted,
                 name: savingData.name,
-                date: 1723658675,
+                date: 1725412179,
                 assets: savingsAssets,
               };
             })()
@@ -135,7 +137,8 @@ export default function ViewSave() {
               This saving is for{" "}
               {saving[0]?.name && (
                 <b className="text-neutral-1">
-                  {ethers.utils.parseBytes32String(saving[0]?.name)}
+                  {/* {ethers.utils.parseBytes32String(saving[0]?.name)} */}
+                  {Web3.utils.hexToUtf8(saving[0]?.name)}
                 </b>
               )}{" "}
               save only
@@ -162,7 +165,7 @@ export default function ViewSave() {
                       <div className="flex">
                         <div className="flex gap-2">
                           <LockIcon />
-                          <span className="">Safelock Balance</span>
+                          <span className="">Savings Balance</span>
                         </div>
                       </div>
 
@@ -171,7 +174,10 @@ export default function ViewSave() {
                         <NumericFormat
                           thousandSeparator
                           displayType="text"
-                          value={saving[0]?.totalDepositInUSD}
+                          value={web3.utils.fromWei(
+                            saving[0]?.totalDepositInUSD,
+                            "ether"
+                          )}
                           decimalScale={2}
                           fixedDecimalScale={
                             parseInt(saving[0]?.totalDepositInUSD) % 1 === 0

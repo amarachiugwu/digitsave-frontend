@@ -19,6 +19,7 @@ import {
 } from "wagmi";
 import { ethers } from "ethers";
 import Modal from "./Modal";
+import Web3 from "web3";
 
 type FormModel = {
   name: string;
@@ -35,6 +36,7 @@ export default function CreateSaveForm() {
   const [displayText, setDisplayText] = useState("");
   const { address } = useAccount();
   const [nextSavingId, setNextSavingId] = useState<number | null>(null);
+  const web3 = new Web3();
 
   useEffect(() => {
     if (lockPeriod === "") {
@@ -95,7 +97,8 @@ export default function CreateSaveForm() {
       address: savingsAcct,
       abi: DigitsaveAcctAbi,
       functionName: "createSaving",
-      args: [ethers.utils.formatBytes32String(name), period],
+      // args: [ethers.utils.formatBytes32String(name), period],
+      args: [web3.utils.padRight(web3.utils.utf8ToHex(name), 64), period],
     });
   }
 
@@ -199,7 +202,7 @@ export default function CreateSaveForm() {
               </div>
             </div>
 
-            <SubmitBtn label="Create safelock" isSubmitting={isPending} />
+            <SubmitBtn label="Create Savings" isSubmitting={isPending} />
 
             {/* {hash && <div>Transaction Hash: {hash}</div>} */}
             {/* {isConfirming && <div>Waiting for confirmation...</div>} */}

@@ -2,8 +2,10 @@ import { getEthersProvider } from '@/ethersProvider';
 import { config } from '@/wagmi';
 import { ethers } from 'ethers';
 import { erc20Abi } from '@/abis/erc20Abi'
+import Web3 from "web3";
 
 const provider = getEthersProvider(config);
+const web3 = new Web3();
 
 
 export async function getAssetBalance(erc20ContractAddress: string, address: string) {
@@ -16,7 +18,9 @@ export async function getAssetBalance(erc20ContractAddress: string, address: str
     const decimals = await erc20Contract.decimals();
 
     // Format the balance based on the decimals
-    const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+    // const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+    const formattedBalance = web3.utils.fromWei(balance.toString(), decimals); 
+
 
     return formattedBalance
   } catch (error) {

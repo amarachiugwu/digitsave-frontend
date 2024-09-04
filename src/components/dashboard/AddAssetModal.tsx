@@ -17,6 +17,7 @@ import { useAccount } from "wagmi";
 import AssetsLoader from "./Loaders/AssetsLoader";
 import { getAssetBalance } from "@/utils/getAssetBalance";
 import { erc20Abi } from "@/abis/erc20Abi";
+import Web3 from "web3";
 
 interface AddAssetModalProps {
   isOpen: boolean;
@@ -56,6 +57,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
   const [nextAssetId, setNextAssetId] = useState<number | null>(null);
   const provider = getEthersProvider(config);
   const [loading, setLoading] = useState(true);
+  const web3 = new Web3();
 
   const {
     data: nextAssetIdData,
@@ -139,14 +141,22 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
                   contract.decimals(),
                 ]);
 
-                const formatedBalance = ethers.utils.formatUnits(
-                  balance,
+                // const formatedBalance = ethers.utils.formatUnits(
+                //   balance,
+                //   decimals
+                // );
+                // const formatedPrice = ethers.utils.formatUnits(
+                //   assets[i].price,
+                //   decimals
+                // );
+                const formatedBalance = web3.utils.fromWei(
+                  balance.toString(),
                   decimals
-                );
-                const formatedPrice = ethers.utils.formatUnits(
-                  assets[i].price,
+                ); // For 18 decimals, adjust unit as necessary
+                const formatedPrice = web3.utils.fromWei(
+                  assets[i].price.toString(),
                   decimals
-                );
+                ); // Adjust the unit if decimals differ
 
                 return {
                   balance: formatedBalance,
@@ -177,11 +187,11 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
         ticker: "/images/tickers/usdt.png",
         decimal: 18,
         fullName: "Tether",
-      }
+      };
       const combinedObjects = {
         ...assets[0],
         ...balances[0],
-        ...assetsDetail
+        ...assetsDetail,
       };
       setSelectedAsset(combinedObjects);
     }
@@ -205,14 +215,20 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
     if (isToggled && selectedAsset) {
       setInputValue(
         (
-          parseFloat(inputValue as string) * parseFloat(`${parseFloat(selectedAsset.price)/selectedAsset.decimal}`)
+          parseFloat(inputValue as string) *
+          parseFloat(
+            `${parseFloat(selectedAsset.price) / selectedAsset.decimal}`
+          )
         ).toFixed(2)
       );
     } else {
       if (selectedAsset) {
         setInputValue(
           (
-            parseFloat(inputValue as string) / parseFloat(`${parseFloat(selectedAsset.price)/selectedAsset.decimal}`)
+            parseFloat(inputValue as string) /
+            parseFloat(
+              `${parseFloat(selectedAsset.price) / selectedAsset.decimal}`
+            )
           ).toFixed(6)
         );
       }
@@ -225,8 +241,8 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
     const balance =
       isToggled && selectedAsset
         ? selectedAsset?.usdBal
-        //@ts-ignore
-        : selectedAsset?.usdBal * parseFloat(selectedAsset?.price);
+        : //@ts-ignore
+          selectedAsset?.usdBal * parseFloat(selectedAsset?.price);
     setInputValue(
       // isToggled
       //   ? (balance * percentage).toFixed(isToggled ? 6 : 2)
@@ -241,7 +257,10 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
     if (!isToggled && selectedAsset) {
       setInputValue(
         (
-          parseFloat(inputValue as string) * parseFloat(`${parseFloat(selectedAsset.price)/selectedAsset.decimal}`)
+          parseFloat(inputValue as string) *
+          parseFloat(
+            `${parseFloat(selectedAsset.price) / selectedAsset.decimal}`
+          )
         ).toFixed(2)
       );
     }
@@ -249,7 +268,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  console.log(selectedAsset)
+  console.log(selectedAsset);
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 backdrop-blur-sm flex justify-center items-center">
@@ -265,8 +284,24 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
             {selectedAsset && (
               <p className="text-sm text-gray-400 text-right cursor-pointer">
                 {isToggled
-                  ? `${(parseFloat(inputValue as string) * parseFloat(`${parseFloat(selectedAsset.price)/selectedAsset.decimal}`)).toFixed(2)} USD`
-                  : `${(parseFloat(inputValue as string) / parseFloat(`${parseFloat(selectedAsset.price)/selectedAsset.decimal}`)).toFixed(6)} ${selectedAsset.name}`}
+                  ? `${(
+                      parseFloat(inputValue as string) *
+                      parseFloat(
+                        `${
+                          parseFloat(selectedAsset.price) /
+                          selectedAsset.decimal
+                        }`
+                      )
+                    ).toFixed(2)} USD`
+                  : `${(
+                      parseFloat(inputValue as string) /
+                      parseFloat(
+                        `${
+                          parseFloat(selectedAsset.price) /
+                          selectedAsset.decimal
+                        }`
+                      )
+                    ).toFixed(6)} ${selectedAsset.name}`}
               </p>
             )}
 
@@ -365,10 +400,15 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({ isOpen, onClose }) => {
                             <Image
                               width={32}
                               height={32}
-                              // @ts-ignore
-                              src={`${assetsDetails[chainId][asset.assetAddress].ticker}`}
-                              // @ts-ignore
-                              alt={`${assetsDetails[chainId][asset.assetAddress].name}`}
+                              src={`${
+                                // @ts-ignore
+                                assetsDetails[chainId][asset.assetAddress]
+                                  .ticker
+                              }`}
+                              alt={`${
+                                // @ts-ignore
+                                assetsDetails[chainId][asset.assetAddress].name
+                              }`}
                               className="border border-white rounded-full"
                             />
                             <div className="flex flex-col">

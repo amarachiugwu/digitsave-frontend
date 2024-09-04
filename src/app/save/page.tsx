@@ -33,6 +33,7 @@ import { ethers } from "ethers";
 import { NumericFormat } from "react-number-format";
 import { toFormattedDate, toRelativeTime } from "@/utils/dateFormat";
 import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
+import Web3 from "web3";
 
 export default function Save() {
   const { address, isConnected } = useAccount();
@@ -41,6 +42,7 @@ export default function Save() {
   const [nextSavingId, setNextSavingId] = useState<number | null>(null);
   const provider = getEthersProvider(config);
   const [navOpen, setNavOpen] = useState(false);
+  const web3 = new Web3();
 
   // fetch users contract >> savings account
   const {
@@ -117,7 +119,7 @@ export default function Save() {
                   lockPeriod: savingData.lockPeriod,
                   isCompleted: savingData.isCompleted,
                   name: savingData.name,
-                  date: 1723658675,
+                  date: 1725412179,
                 };
               })()
             );
@@ -239,7 +241,7 @@ export default function Save() {
             <section className="w-full m-h-screen w-4/4 px-6 py-10">
               <div className="flex gap-4 w-full">
                 <div className="w-full flex flex-col gap-4">
-                  <h1 className="font-swiss text-2xl">All Safelocks</h1>
+                  <h1 className="font-swiss text-2xl">All Savings</h1>
                   <form action="" className="flex gap-2">
                     <div className="py-3 px-5 flex items-center gap-2 bg-tertiary-5 rounded-md">
                       <label htmlFor="search">
@@ -271,7 +273,7 @@ export default function Save() {
                               Date Created
                             </th>
                             <th className="px-2 border-b border-tertiary-5 text-center py-[23px]">
-                              Total Saved
+                              Total Amount
                             </th>
                             <th className="px-2 border-b border-tertiary-5 text-center py-[23px]">
                               Type
@@ -303,7 +305,8 @@ export default function Save() {
                                   href={`/view-save?id=${saving.id}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
-                                  {ethers.utils.parseBytes32String(saving.name)}
+                                  {/* {ethers.utils.parseBytes32String(saving.name)} */}
+                                  {Web3.utils.hexToUtf8(saving.name)}
                                 </Link>
                               </td>
 
@@ -325,7 +328,10 @@ export default function Save() {
                                   <NumericFormat
                                     thousandSeparator
                                     displayType="text"
-                                    value={saving.totalDepositInUSD}
+                                    value={web3.utils.fromWei(
+                                      saving.totalDepositInUSD,
+                                      "ether"
+                                    )}
                                     decimalScale={2}
                                     fixedDecimalScale={
                                       saving.totalDepositInUSD % 1 === 0
@@ -383,8 +389,8 @@ export default function Save() {
 
               <div className="mx-6 mt-2 flex gap-2 p-2 w-[170px] bg-[#42B0B01A] rounded-tr-xl rounded-bl-xl">
                 <InfoIcon />
-                <Link href="/learn" className="text-xs">
-                  What is a Safelock?
+                <Link href="/learn#faq" className="text-xs">
+                  What is a Savng?
                 </Link>
               </div>
 

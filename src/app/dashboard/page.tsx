@@ -29,6 +29,8 @@ import { config } from "@/wagmi";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import Web3 from "web3";
+import { getWeb3Provider } from "@/web3jsProvider";
 
 export default function Dashboard() {
   const { address, isConnected, chainId } = useAccount();
@@ -36,13 +38,16 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [nextSavingId, setNextSavingId] = useState<number | null>(null);
   const provider = getEthersProvider(config);
-  const [navOpen, setNavOpen] = useState(false);
+  // const provider = getWeb3Provider(config);
 
+  const [navOpen, setNavOpen] = useState(false);
   const activities = activitiesQuery(address);
   const [result, reexecuteQuery] = useQuery({
     query: activities,
     pause: address == undefined,
   });
+
+  const web3 = new Web3();
 
   const refreshActivities = () => {
     // Refetch the query and skip the cache
@@ -100,9 +105,13 @@ export default function Dashboard() {
 
                 const filter = {
                   address: savingsAcct,
+                  // topics: [
+                  //   ethers.utils.id("SavingCreated(uint256,uint256)"),
+                  //   ethers.utils.hexZeroPad(ethers.utils.hexlify(i), 32),
+                  // ],
                   topics: [
-                    ethers.utils.id("SavingCreated(uint256,uint256)"),
-                    ethers.utils.hexZeroPad(ethers.utils.hexlify(i), 32),
+                    web3.utils.keccak256("SavingCreated(uint256,uint256)"),
+                    web3.utils.padLeft(web3.utils.toHex(i), 64),
                   ],
                   fromBlock: 13767310,
                   toBlock: 13767310,
@@ -123,7 +132,8 @@ export default function Dashboard() {
                   lockPeriod: savingData.lockPeriod,
                   isCompleted: savingData.isCompleted,
                   name: savingData.name,
-                  eventLog: savingEvent,
+                  // eventLog: savingEvent,
+                  date: 1725412179,
                 };
               })()
             );
@@ -279,9 +289,10 @@ export default function Dashboard() {
                               <div className="flex flex-col gap-1 ">
                                 <p>
                                   <b>
-                                    {ethers.utils.parseBytes32String(
+                                    {/* {ethers.utils.parseBytes32String(
                                       saving.name
-                                    )}
+                                    )} */}
+                                    {Web3.utils.hexToUtf8(saving.name)}
                                   </b>{" "}
                                   Save created
                                 </p>
@@ -304,17 +315,19 @@ export default function Dashboard() {
                               manage
                             </Link>
 
-                            {saving.eventLog[0] && (
+                            {
+                              // saving.eventLog[0] &&
                               <p>
-                                {toFormattedDate(
+                                {/* {toFormattedDate(
                                   parseInt(
                                     `${ethers.BigNumber.from(
                                       saving.eventLog[0].topics[2]
                                     )}`
                                   )
-                                )}
+                                )} */}
+                                {toFormattedDate(saving.date)}
                               </p>
-                            )}
+                            }
                           </div>
                         </div>
                       </div>

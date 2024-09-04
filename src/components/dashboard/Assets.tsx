@@ -11,12 +11,14 @@ import { config } from "@/wagmi";
 import { ethers } from "ethers";
 import { NumericFormat } from "react-number-format";
 import AssetsLoader from "./Loaders/AssetsLoader";
+import Web3 from "web3";
 
 export default function Assets() {
   const [assets, setAssets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [nextAssetId, setNextAssetId] = useState<number | null>(null);
   const provider = getEthersProvider(config);
+  const web3 = new Web3();
 
   const { chainId, isConnected } = useAccount();
   // Fetch nextAssetId using useReadContract
