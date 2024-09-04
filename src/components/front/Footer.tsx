@@ -1,6 +1,12 @@
 import Link from "next/link";
 import React from "react";
-import { GithubIcon, LogoIcon, TwitterIcon, YoutubeIcon } from "../../icon";
+import {
+  GithubIcon,
+  LinkedinIcon,
+  LogoIcon,
+  TwitterIcon,
+  YoutubeIcon,
+} from "../../icon";
 import { Link as ScrollLink } from "react-scroll";
 import Image from "next/image";
 
@@ -78,6 +84,14 @@ export default function Footer() {
             <li>
               <a target="_blank" href={"https://www.youtube.com/@digitsave"}>
                 <YoutubeIcon />
+              </a>
+            </li>
+            <li>
+              <a
+                target="_blank"
+                href={"https://www.linkedin.com/company/digitsave/"}
+              >
+                <LinkedinIcon />
               </a>
             </li>
           </ul>
