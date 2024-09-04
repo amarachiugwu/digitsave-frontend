@@ -7,13 +7,14 @@ import { getEthersProvider } from "@/ethersProvider";
 import { config } from "@/wagmi";
 import { DigitsaveAcctAbi } from "@/abis/DigitsaveAccountAbi";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
-import { factoryContractAddrs } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { ethers } from "ethers";
 import { NumericFormat } from "react-number-format";
 import Web3 from "web3";
 
 export default function Balances() {
   //   const pathname = usePathname();
+  const { factoryContractAddrs } = useContractAddresses();
   const { address, chainId } = useAccount();
   const [totalAmountInUsd, setTotalAmountInUsd] = useState<number>(0);
   const [loading, setLoading] = useState(true);

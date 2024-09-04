@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { format, addMonths } from "date-fns";
 import SubmitBtn from "@/components/dashboard/SubmitBtn";
-import { factoryContractAddrs } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import { DigitsaveAcctAbi } from "@/abis/DigitsaveAccountAbi";
 import { Field, Form, Formik } from "formik";
@@ -32,6 +32,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function CreateSaveForm() {
+  const { factoryContractAddrs } = useContractAddresses();
   const [lockPeriod, setLockPeriod] = useState("");
   const [displayText, setDisplayText] = useState("");
   const { address } = useAccount();

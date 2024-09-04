@@ -10,7 +10,7 @@ import {
   useSimulateContract,
   useReadContract,
 } from "wagmi";
-import { factoryContractAddrs } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import {
   Circle,
@@ -37,6 +37,7 @@ import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
 import { NumericFormat } from "react-number-format";
 
 export default function Activities() {
+  const { factoryContractAddrs } = useContractAddresses();
   const { address, isConnected, chainId } = useAccount();
   const [savings, setSavings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

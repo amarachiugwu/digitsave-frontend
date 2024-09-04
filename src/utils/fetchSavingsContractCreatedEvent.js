@@ -1,5 +1,5 @@
 import { FactoryAbi } from '@/abis/FactoryContractAbi'
-import { factoryContractAddrs } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { config } from '@/wagmi'
 import { getEthersProvider } from '@/ethersProvider'
 import { ethers } from 'ethers';
@@ -12,6 +12,7 @@ export async function FetchSavingsContractCreatedEvent(userAddress) {
     const provider = getEthersProvider(config)
     const web3 = new Web3();
 
+    const { factoryContractAddrs } = useContractAddresses();
 
     
     const contract = new ethers.Contract(factoryContractAddrs, FactoryAbi, provider);
