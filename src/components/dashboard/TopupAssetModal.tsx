@@ -1,5 +1,6 @@
 import { StorageContractAbi } from "@/abis/StorageContractAbi";
 import {
+  assetsArray,
   assetsDetails,
   factoryContractAddrs,
   storageContractAddrs,
@@ -22,17 +23,18 @@ import { BigNumber } from "ethers";
 import Modal from "./Modal";
 import { readContract } from "@wagmi/core";
 import {
-  AddAssetModalProps,
+  TopupAssetModalProps,
   AssetData,
   AssetDetail,
   FullAsset,
   SavingsAsset,
 } from "@/@types/assets.types";
 
-const AddAssetModal: React.FC<AddAssetModalProps> = ({
+const TopupAssetModal: React.FC<TopupAssetModalProps> = ({
   isOpen,
   onClose,
   savingId,
+  assetId: _assetId,
 }) => {
   const { chainId, address } = useAccount();
   const [selectedAsset, setSelectedAsset] = useState<FullAsset>();
@@ -127,21 +129,18 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
 
   // sets the default seleceted asset
   useEffect(() => {
-    if (assets[0] && balances[0] && !selectedAsset && chainId) {
-      const assetsDetail = {
-        name: "USDT",
-        ticker: "/images/tickers/usdt.png",
-        decimal: 18,
-        fullName: "Tether",
-      };
+    if (assets[0] && balances[0] && !selectedAsset && _assetId && chainId) {
+      // @ts-ignore
+      const assetsDetail = assetsArray[chainId][_assetId - 1];
       const combinedObjects = {
         ...assets[0],
         ...balances[0],
         ...assetsDetail,
       };
+      console.log(combinedObjects, _assetId - 1);
       setSelectedAsset(combinedObjects);
     }
-  }, [assets, balances, chainId]);
+  }, [assets, balances, chainId, _assetId]);
 
   // handles the selection of assets form the dropdown
   const handleAssetSelect = (
@@ -360,7 +359,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
     });
   }
 
-  async function addAsset() {
+  async function topUpAsset() {
     setAlertModalOpen(true);
     setTrackModalOpen(true);
 
@@ -387,14 +386,14 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
     addAssetWrite({
       address: savingsAcct,
       abi: DigitsaveAcctAbi,
-      functionName: "addAsset",
+      functionName: "topUpAsset",
       args: [savingIdBigNumber, assetParam],
     });
   }
 
   useEffect(() => {
     if (isApproved) {
-      addAsset();
+      topUpAsset();
     }
   }, [isApproved]);
 
@@ -405,7 +404,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
       <div className="bg-tertiary-7 text-white px-6 py-12 rounded-lg shadow-lg max-w-lg w-full">
         <div className="flex justify-between items-center mb-6">
           <button className="text-white font-medium text-xl" onClick={onClose}>
-            &larr; Add asset
+            &larr; Topup Asset
           </button>
         </div>
         <div className="flex">
@@ -518,20 +517,14 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
                       asset.isActive && (
                         <div
                           key={index}
-                          className={`w-full flex justify-between items-center border border-x-0 border-t-0 pb-4 border-b-tertiary-5 cursor-pointer ${
-                            savingsAssets.includes(asset.id) ? "opacity-50" : ""
-                          }`}
+                          className={`w-full flex justify-between items-center border border-x-0 border-t-0 pb-4 border-b-tertiary-5 cursor-pointer`}
                           onClick={() => {
-                            if (savingsAssets.includes(asset.id)) {
-                              alert("asset already added, topup instead");
-                            } else {
-                              handleAssetSelect(
-                                asset,
-                                // @ts-ignore
-                                assetsDetails[chainId][asset.assetAddress],
-                                balances[index]
-                              );
-                            }
+                            handleAssetSelect(
+                              asset,
+                              // @ts-ignore
+                              assetsDetails[chainId][asset.assetAddress],
+                              balances[index]
+                            );
                           }}
                         >
                           <div
@@ -561,11 +554,6 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
                                       .name
                                   }
                                 </span>
-                                {savingsAssets.includes(asset.id) && (
-                                  <span className="text-[10px] bg-primary-0 p-1 rounded-lg text-white">
-                                    added
-                                  </span>
-                                )}
                               </p>
                               <span className="text-[10px] text-[#979797]">
                                 {
@@ -705,14 +693,15 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
               isConfirming
             }
           >
-            Add asset
+            Topup Asset
           </button>
         </div>
 
         {/* {addAssetHash && <div>Transaction Hash: {addAssetHash}</div>}
         {isConfirming && <div>Waiting for confirmation...</div>}
         {isConfirmed && <div>Transaction confirmed.</div>}
-        {addAssetIsPending && <div>Transaction Pending.</div>} */}
+        {addAssetIsPending && <div>Transaction Pending.</div>}
+
         {addAssetError && (
           <>
             <div className="text-center text-red-400 text-sm pt-3">
@@ -720,9 +709,9 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
               {(addAssetError as BaseError).shortMessage ||
                 addAssetError.message}
             </div>
-            {/* <div>{addAssetError.message}</div> */}
+            <div>{addAssetError.message}</div>
           </>
-        )}
+        )} */}
       </div>
 
       {(isApproving || isConfirming) && (
@@ -836,4 +825,4 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
   );
 };
 
-export default AddAssetModal;
+export default TopupAssetModal;

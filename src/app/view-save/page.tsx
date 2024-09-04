@@ -14,16 +14,23 @@ import Link from "next/link";
 import { useAccount, useReadContract } from "wagmi";
 import { DigitsaveAcctAbi } from "@/abis/DigitsaveAccountAbi";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
-import { factoryContractAddrs } from "@/constants";
+import { assetsArray, factoryContractAddrs } from "@/constants";
 import { ethers } from "ethers";
 import { getEthersProvider } from "@/ethersProvider";
 import { config } from "@/wagmi";
 import { useSearchParams } from "next/navigation";
 import { NumericFormat } from "react-number-format";
-import { toRelativeTime } from "@/utils/dateFormat";
+import {
+  calculatePercentageDaysGone,
+  toRelativeTime,
+} from "@/utils/dateFormat";
 import ProgressBar from "@/components/dashboard/ProgressBar";
 import OverlayLoader from "@/components/dashboard/Loaders/OverlayLoader";
 import AddAssetModal from "@/components/dashboard/AddAssetModal";
+import { BigNumber } from "ethers";
+import Image from "next/image";
+import { CombinedAsset } from "@/@types/assets.types";
+import TopupAssetModal from "@/components/dashboard/TopupAssetModal";
 
 type Save = {
   id: number;
@@ -34,20 +41,38 @@ type Save = {
   isCompleted: boolean;
   name: string;
   date: number;
-  assets: [];
+  assets: any[];
 };
 
 export default function ViewSave() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const { address } = useAccount();
+  const dateCreated = parseInt(searchParams.get("datecreated") as string);
+  const lockPeriod = parseInt(searchParams.get("period") as string);
+  const { address, chainId } = useAccount();
   const [saving, setSaving] = useState<Save[]>([]);
   const [loading, setLoading] = useState(true);
   const provider = getEthersProvider(config);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [navOpen, setNavOpen] = useState(false);
-  const handleOpenModal = () => setModalOpen(true);
+  const [isTopupModalOpen, setTopupModalOpen] = useState<boolean>(false);
+  const [selectedAssetId, setSelectedAssetId] = useState(1);
+  const percentGone = calculatePercentageDaysGone(
+    dateCreated,
+    lockPeriod
+  ).toFixed(2);
+  const isPercentageGone = isNaN(parseFloat(percentGone)) ? "0" : percentGone;
+
   const handleCloseModal = () => setModalOpen(false);
+  const handleOpenModal = () => setModalOpen(true);
+
+  const handleTopupCloseModal = () => setTopupModalOpen(false);
+  const handleTopupOpenModal = (assetId: number) => {
+    setSelectedAssetId(assetId);
+    setTopupModalOpen(true);
+  };
+
+  useEffect(() => {}, [isModalOpen]);
 
   // fetch users contract >> savings account
   const {
@@ -62,7 +87,11 @@ export default function ViewSave() {
   });
 
   useEffect(() => {
-    if (savingsAcct !== null && id) {
+    if (
+      (savingsAcct !== null && id) ||
+      isModalOpen === false ||
+      isTopupModalOpen === false
+    ) {
       const fetchAllSavings = async () => {
         try {
           const savingPromise = [];
@@ -81,6 +110,25 @@ export default function ViewSave() {
                 contract.getSavingsAssets(id),
               ]);
 
+              const combinedAssetData: CombinedAsset[] = [];
+              savingsAssets.map(
+                (asset: {
+                  assetId: BigNumber;
+                  amountDepositedInUsd: BigNumber;
+                  amount: BigNumber;
+                  amountWithdrawnInUsd: BigNumber;
+                }) => {
+                  const id = parseInt(asset.assetId.toString());
+
+                  const extraDetails = assetsArray[chainId as number][id - 1];
+
+                  combinedAssetData.push({
+                    ...asset,
+                    ...extraDetails,
+                  });
+                }
+              );
+
               return {
                 id: savingData.id.toString(),
                 totalDepositInUSD: savingData.totalDepositInUSD.toString(),
@@ -90,7 +138,7 @@ export default function ViewSave() {
                 isCompleted: savingData.isCompleted,
                 name: savingData.name,
                 date: 1723658675,
-                assets: savingsAssets,
+                assets: combinedAssetData,
               };
             })()
           );
@@ -102,7 +150,7 @@ export default function ViewSave() {
 
           setSaving(savingsData);
         } catch (error) {
-          console.error("Error fetching assets:", error);
+          // console.error("Error fetching assets:", error);
         } finally {
           // Ensure loading state is updated
           setLoading(false);
@@ -111,7 +159,7 @@ export default function ViewSave() {
 
       fetchAllSavings();
     }
-  }, [savingsAcct, id]);
+  }, [savingsAcct, id, isModalOpen, isTopupModalOpen]);
 
   return (
     <main className="text-neutral-2">
@@ -162,24 +210,32 @@ export default function ViewSave() {
                       <div className="flex">
                         <div className="flex gap-2">
                           <LockIcon />
-                          <span className="">Safelock Balance</span>
+                          <span className="">savings Balance</span>
                         </div>
                       </div>
 
-                      <p className="font-bold font-swiss text-2xl">
+                      <div className="font-bold font-swiss text-2xl">
                         $
                         <NumericFormat
                           thousandSeparator
                           displayType="text"
-                          value={saving[0]?.totalDepositInUSD}
+                          value={ethers.utils.formatUnits(
+                            saving[0]?.totalDepositInUSD
+                          )}
                           decimalScale={2}
                           fixedDecimalScale={
-                            parseInt(saving[0]?.totalDepositInUSD) % 1 === 0
+                            parseInt(
+                              ethers.utils.formatUnits(
+                                saving[0]?.totalDepositInUSD
+                              )
+                            ) %
+                              1 ===
+                            0
                               ? true
                               : false
                           }
                         />
-                      </p>
+                      </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -190,7 +246,9 @@ export default function ViewSave() {
                         </div>
                       </div>
 
-                      <p className="font-bold font-swiss text-2xl">3</p>
+                      <p className="font-bold font-swiss text-2xl">
+                        {saving[0]?.assets.length}
+                      </p>
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -202,7 +260,7 @@ export default function ViewSave() {
                       </div>
 
                       <div className="flex flex-col justify-between gap-2">
-                        <ProgressBar value={60} />
+                        <ProgressBar value={parseInt(isPercentageGone)} />
                         {saving[0]?.lockPeriod && (
                           <span className="text-neutral-1 text-xs">
                             Due {toRelativeTime(saving[0]?.lockPeriod)}
@@ -213,7 +271,7 @@ export default function ViewSave() {
                   </div>
                 </div>
 
-                <div className="w-2/5 p-6  border border-gradient bg-[#131e1e] text-white">
+                <div className="w-2/5 p-6  border rounded-lg border-primary-5 bg-[#131e1e] text-white">
                   <div className="flex flex-col gap-4">
                     <span className="text-sm">Intrest Balance</span>
                     <p className="font-bold font-swiss text-4xl">$0.00</p>
@@ -263,19 +321,147 @@ export default function ViewSave() {
                   </button>
                 </div>
               )}
+
+              <div className="py-8">
+                {saving[0]?.assets.map((asset, index) => (
+                  <div
+                    key={index}
+                    className="w-full sm:w-4/5 md:w-3/5 mx-auto flex items-center gap-4 mb-4"
+                  >
+                    <div
+                      className={`flex-grow flex  justify-between items-center bg-tertiary-6 py-4 px-8 rounded-md border-b-tertiary-5 cursor-pointer`}
+                    >
+                      <div
+                        key={asset.ticker}
+                        className="flex items-center gap-2"
+                      >
+                        <Image
+                          width={32}
+                          height={32}
+                          src={`${asset.ticker}`}
+                          alt={`${asset.name}`}
+                          className="border border-white rounded-full"
+                        />
+                        <div className="flex flex-col">
+                          <p className="flex items-center gap-1">
+                            <span className=" text-sm">{asset.name}</span>
+                          </p>
+                          <span className="text-[12px] text-[#979797]">
+                            {asset.fullName}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <div className="flex flex-col">
+                          <div className="flex justify-end gap-1">
+                            <NumericFormat
+                              className=" text-sm"
+                              thousandSeparator
+                              displayType="text"
+                              value={ethers.utils.formatUnits(
+                                BigNumber.from(asset.amount),
+                                18
+                              )}
+                              decimalScale={
+                                parseFloat(
+                                  ethers.utils.formatUnits(
+                                    BigNumber.from(asset.amount),
+                                    18
+                                  )
+                                ) %
+                                  1 ===
+                                0
+                                  ? 2
+                                  : 8
+                              }
+                              fixedDecimalScale={
+                                parseFloat(
+                                  ethers.utils.formatUnits(
+                                    BigNumber.from(asset.amount),
+                                    18
+                                  )
+                                ) %
+                                  1 ===
+                                0
+                                  ? true
+                                  : false
+                              }
+                            />
+                          </div>
+                          <div className="flex text-[12px] text-[#979797]">
+                            {"~ $ "}
+                            <NumericFormat
+                              className="flex justify-end text-[12px] text-[#979797]"
+                              thousandSeparator
+                              displayType="text"
+                              value={ethers.utils.formatUnits(
+                                BigNumber.from(asset.amountDepositedInUsd),
+                                18
+                              )}
+                              decimalScale={
+                                parseFloat(
+                                  ethers.utils.formatUnits(
+                                    BigNumber.from(asset.amountDepositedInUsd),
+                                    18
+                                  )
+                                ) %
+                                  1 ===
+                                0
+                                  ? 2
+                                  : 8
+                              }
+                              fixedDecimalScale={
+                                parseFloat(
+                                  ethers.utils.formatUnits(
+                                    BigNumber.from(asset.amountDepositedInUsd),
+                                    18
+                                  )
+                                ) %
+                                  1 ===
+                                0
+                                  ? true
+                                  : false
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="">
+                      <button
+                        className="bg-primary-5 text-white py-2 px-4 rounded-md font-semibold"
+                        onClick={() => {
+                          handleTopupOpenModal(
+                            parseInt(asset.assetId.toString())
+                          );
+                        }}
+                      >
+                        Top up
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         </div>
       </section>
 
       {loading && <OverlayLoader />}
-      <AddAssetModal isOpen={isModalOpen} onClose={handleCloseModal} />
+      <AddAssetModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        savingId={id as string}
+      />
+
+      <TopupAssetModal
+        isOpen={isTopupModalOpen}
+        onClose={handleTopupCloseModal}
+        savingId={id as string}
+        assetId={selectedAssetId}
+      />
     </main>
   );
 }
-
-// export default function ViewSave() {
-//   <Suspense fallback={<div>Loading...</div>}>
-//     <SafeData />
-//   </Suspense>
-// }
