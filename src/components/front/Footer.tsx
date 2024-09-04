@@ -1,6 +1,12 @@
 import Link from "next/link";
 import React from "react";
-import { GithubIcon, LogoIcon, TwitterIcon } from "../../icon";
+import {
+  GithubIcon,
+  LinkedinIcon,
+  LogoIcon,
+  TwitterIcon,
+  YoutubeIcon,
+} from "../../icon";
 import { Link as ScrollLink } from "react-scroll";
 import Image from "next/image";
 
@@ -40,6 +46,16 @@ export default function Footer() {
               >
                 FAQ
               </ScrollLink>
+
+              <ScrollLink
+                to="roadmap"
+                spy={true}
+                smooth={true}
+                duration={500}
+                className="cursor-pointer hover:text-white transition-colors duration-300"
+              >
+                Roadmap
+              </ScrollLink>
             </ul>
           </nav>
         </div>
@@ -63,6 +79,19 @@ export default function Footer() {
                 href={"https://github.com/orgs/DigitSave/repositories"}
               >
                 <GithubIcon />
+              </a>
+            </li>
+            <li>
+              <a target="_blank" href={"https://www.youtube.com/@digitsave"}>
+                <YoutubeIcon />
+              </a>
+            </li>
+            <li>
+              <a
+                target="_blank"
+                href={"https://www.linkedin.com/company/digitsave/"}
+              >
+                <LinkedinIcon />
               </a>
             </li>
           </ul>

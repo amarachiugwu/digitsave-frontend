@@ -81,6 +81,13 @@ const sections: Section[] = [
           "You can add multiple assets to a save, watch the video on how you can add assets, and meet your goals",
         videoUrl: "https://www.youtube.com/watch?v=JT9N0EefS7o&t",
       },
+      {
+        id: "topAsset",
+        title: "Top up an Asset in a save",
+        description:
+          "You can add multiple assets to a save, watch the video on how you can add assets, and meet your goals",
+        videoUrl: "https://www.youtube.com/watch?v=JT9N0EefS7o&t",
+      },
     ],
   },
   {
