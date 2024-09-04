@@ -9,7 +9,7 @@ import {
   useSimulateContract,
   useReadContract,
 } from "wagmi";
-import { factoryContractAddrs } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { DigitsaveAcctAbi } from "@/abis/DigitsaveAccountAbi";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import {
@@ -36,6 +36,7 @@ import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
 import Web3 from "web3";
 
 export default function Save() {
+  const { factoryContractAddrs } = useContractAddresses();
   const { address, isConnected } = useAccount();
   const [savings, setSavings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

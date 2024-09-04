@@ -10,7 +10,7 @@ import {
   useSimulateContract,
   useReadContract,
 } from "wagmi";
-import { factoryContractAddrs } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import {
   Circle,
@@ -39,8 +39,20 @@ import Web3 from "web3";
 import { getWeb3Provider } from "@/web3jsProvider";
 import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
 import { NumericFormat } from "react-number-format";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
+  const router = useRouter();
+
+  const { isDisconnected } = useAccount();
+
+  useEffect(() => {
+    if (isDisconnected) {
+      router.push("/dashboard");
+    }
+  }, [isDisconnected, router]);
+
+  const { factoryContractAddrs } = useContractAddresses();
   const { address, isConnected, chainId } = useAccount();
   const [savings, setSavings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

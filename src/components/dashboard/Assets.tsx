@@ -2,30 +2,39 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { BaseError, useReadContract } from "wagmi";
-import { useAccount } from "wagmi";
+import { useReadContract, useAccount, useChainId } from "wagmi";
 import { StorageContractAbi } from "@/abis/StorageContractAbi";
-import { assetsDetails, storageContractAddrs } from "@/constants";
+import { assetsDetails } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { getEthersProvider } from "@/ethersProvider";
 import { config } from "@/wagmi";
 import { ethers } from "ethers";
 import { NumericFormat } from "react-number-format";
 import AssetsLoader from "./Loaders/AssetsLoader";
-import Web3 from "web3";
 
-export default function Assets() {
-  const [assets, setAssets] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+// Define the type for an asset object
+interface Asset {
+  id: string;
+  assetAddress: string;
+  chainLinkAggregator: string;
+  isActive: boolean;
+  price: string;
+}
+
+const Assets: React.FC = () => {
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [nextAssetId, setNextAssetId] = useState<number | null>(null);
-  const provider = getEthersProvider(config);
-  const web3 = new Web3();
 
-  const { chainId, isConnected } = useAccount();
-  // Fetch nextAssetId using useReadContract
+  const provider = getEthersProvider(config);
+  const { storageContractAddrs } = useContractAddresses();
+  const chainId = useChainId();
+  const { isConnected } = useAccount();
+
   const {
     data: nextAssetIdData,
-    error: errorAssetId,
     isLoading: isLoadingAssetId,
+    error: errorAssetId,
   } = useReadContract({
     abi: StorageContractAbi,
     address: storageContractAddrs,
@@ -33,47 +42,45 @@ export default function Assets() {
     args: [],
   });
 
-  // console.log(assets);
+  // Set next asset ID when data is available
   useEffect(() => {
     if (nextAssetIdData) {
       setNextAssetId(parseInt(nextAssetIdData.toString()));
     }
   }, [nextAssetIdData]);
 
+  // Fetch all assets when the next asset ID is set
   useEffect(() => {
     if (nextAssetId !== null) {
       const fetchAllAssets = async () => {
         try {
-          const assetPromises = [];
-          for (let i = 1; i < nextAssetId; i++) {
-            // Create a new promise for each asset fetch
-            assetPromises.push(
-              (async () => {
-                const contract = new ethers.Contract(
-                  storageContractAddrs,
-                  StorageContractAbi,
-                  provider
-                );
+          const contract = new ethers.Contract(
+            storageContractAddrs,
+            StorageContractAbi,
+            provider
+          );
 
-                const [assetData, assetDetailData] = await Promise.all([
-                  contract.assets(i),
-                  contract.getAssetDetail(i),
-                ]);
+          const assetPromises = Array.from(
+            { length: nextAssetId - 1 },
+            (_, i) =>
+              Promise.all([
+                contract.assets(i + 1),
+                contract.getAssetDetail(i + 1),
+              ])
+          );
 
-                return {
-                  id: assetData.id.toString(),
-                  assetAddress: assetData.asset,
-                  chainLinkAggregator: assetData.chainLinkAggregator,
-                  isActive: assetData.isActive,
-                  price: assetDetailData.price.toString(),
-                };
-              })()
-            );
-          }
-
-          // Wait for all promises to resolve
           const assetsData = await Promise.all(assetPromises);
-          setAssets(assetsData);
+          const formattedAssets = assetsData.map(
+            ([assetData, assetDetailData]) => ({
+              id: assetData.id.toString(),
+              assetAddress: assetData.asset,
+              chainLinkAggregator: assetData.chainLinkAggregator,
+              isActive: assetData.isActive,
+              price: assetDetailData.price.toString(),
+            })
+          );
+
+          setAssets(formattedAssets);
         } catch (error) {
           console.error("Error fetching assets:", error);
         } finally {
@@ -83,155 +90,57 @@ export default function Assets() {
 
       fetchAllAssets();
     }
-  }, [nextAssetId, chainId]);
+  }, [nextAssetId, chainId, provider, storageContractAddrs]);
 
   if (isLoadingAssetId || loading) return <AssetsLoader />;
-  // if (errorAssetId) return <div>Error: {errorAssetId.message}</div>;
 
-  // console.log(nextAssetId);
+  // Error rendering if asset ID retrieval fails
+  if (errorAssetId) return <div>Error: {errorAssetId.message}</div>;
 
-  return !isConnected && chainId ? (
-    <div className="w-2/5 flex flex-col gap-4">
-      <p className="font-semibold">Supported assets</p>
-      {/* {errorAssetId && (
-        <div>
-          Error:{" "}
-          {(errorAssetId as BaseError).shortMessage || errorAssetId.message}
+  const renderAsset = (asset: Asset, index: number) => {
+    if (!asset.isActive || !assetsDetails || !chainId) return null;
+    //@ts-ignore
+    const assetDetail = assetsDetails[chainId]?.[asset.assetAddress];
+    if (!assetDetail) return null;
+
+    const formattedPrice = Number(asset.price) / 10 ** assetDetail.decimal;
+
+    return (
+      <div key={index} className="w-full flex justify-between items-center">
+        <div className="flex gap-4 items-center">
+          <Image
+            width={48}
+            height={48}
+            src={assetDetail.ticker}
+            alt={assetDetail.name}
+            className="border border-white rounded-full"
+          />
+          <div className="flex flex-col gap-1">
+            <p>{assetDetail.name}</p>
+          </div>
         </div>
-      )} */}
-      <div className="w-full flex flex-col rounded-lg gap-4 bg-[#2B2B2B80] p-6">
-        {assets.map(
-          (asset, index) =>
-            asset.isActive && (
-              <div
-                key={index}
-                className="w-full flex justify-between items-center"
-              >
-                <div className="flex gap-4 items-center">
-                  <Image
-                    width={48}
-                    height={48}
-                    // @ts-ignore
-                    src={`${assetsDetails[chainId][asset.assetAddress].ticker}`}
-                    // @ts-ignore
-                    alt={`${assetsDetails[chainId][asset.assetAddress].name}`}
-                    className="border border-white rounded-full"
-                  />
-                  <div className="flex flex-col gap-1 ">
-                    <p>
-                      {
-                        // @ts-ignore
-                        assetsDetails[chainId][asset.assetAddress].name
-                      }
-                    </p>
-                  </div>
-                </div>
-
-                <p>
-                  {"$ "}
-                  <NumericFormat
-                    thousandSeparator
-                    displayType="text"
-                    value={
-                      asset.price /
-                      10 **
-                        // @ts-ignore
-                        assetsDetails[`${chainId}`][asset.assetAddress].decimal
-                    }
-                    decimalScale={2}
-                    fixedDecimalScale={
-                      asset.price /
-                        10 **
-                          // @ts-ignore
-                          assetsDetails[84532][asset.assetAddress].decimal &&
-                      (asset.price /
-                        // @ts-ignore
-                        10 **
-                          // @ts-ignore
-                          assetsDetails[chainId][asset.assetAddress].decimal) %
-                        1 ===
-                        0
-                        ? true
-                        : false
-                    }
-                  />
-                  <span></span>
-                </p>
-              </div>
-            )
-        )}
+        <p>
+          {"$ "}
+          <NumericFormat
+            value={formattedPrice}
+            thousandSeparator
+            displayType="text"
+            decimalScale={2}
+            fixedDecimalScale={formattedPrice % 1 === 0}
+          />
+        </p>
       </div>
-    </div>
-  ) : (
+    );
+  };
+
+  return (
     <div className="w-2/5 flex flex-col gap-4">
       <p className="font-semibold">Supported assets</p>
-      {/* {errorAssetId && (
-        <div>
-          Error:{" "}
-          {(errorAssetId as BaseError).shortMessage || errorAssetId.message}
-        </div>
-      )} */}
       <div className="w-full flex flex-col rounded-lg gap-4 bg-[#2B2B2B80] p-6">
-        {assets.map(
-          (asset, index) =>
-            asset.isActive && (
-              <div
-                key={index}
-                className="w-full flex justify-between items-center"
-              >
-                <div className="flex gap-4 items-center">
-                  <Image
-                    width={48}
-                    height={48}
-                    // @ts-ignore
-                    src={`${assetsDetails[84532][asset.assetAddress].ticker}`}
-                    // @ts-ignore
-                    alt={`${assetsDetails[84532][asset.assetAddress].name}`}
-                    className="border border-white rounded-full"
-                  />
-                  <div className="flex flex-col gap-1 ">
-                    <p>
-                      {
-                        // @ts-ignore
-                        assetsDetails[84532][asset.assetAddress].name
-                      }
-                    </p>
-                  </div>
-                </div>
-
-                <p>
-                  {"$ "}
-                  <NumericFormat
-                    thousandSeparator
-                    displayType="text"
-                    value={
-                      asset.price /
-                      // @ts-ignore
-                      10 ** assetsDetails[84532][asset.assetAddress].decimal
-                    }
-                    decimalScale={2}
-                    fixedDecimalScale={
-                      asset.price /
-                        10 **
-                          // @ts-ignore
-                          assetsDetails[84532][asset.assetAddress].decimal &&
-                      (asset.price /
-                        // @ts-ignore
-                        10 **
-                          // @ts-ignore
-                          assetsDetails[84532][asset.assetAddress].decimal) %
-                        1 ===
-                        0
-                        ? true
-                        : false
-                    }
-                  />
-                  <span></span>
-                </p>
-              </div>
-            )
-        )}
+        {assets.map(renderAsset)}
       </div>
     </div>
   );
-}
+};
+
+export default Assets;

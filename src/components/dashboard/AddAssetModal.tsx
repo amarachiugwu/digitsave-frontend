@@ -1,9 +1,6 @@
 import { StorageContractAbi } from "@/abis/StorageContractAbi";
-import {
-  assetsDetails,
-  factoryContractAddrs,
-  storageContractAddrs,
-} from "@/constants";
+import { assetsDetails } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { getEthersProvider } from "@/ethersProvider";
 import { config } from "@/wagmi";
 import { ethers } from "ethers";
@@ -51,6 +48,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
   const [isAlertModalOpen, setAlertModalOpen] = useState(true);
   const [isTrackModalOpen, setTrackModalOpen] = useState(false);
   const web3 = new Web3();
+  const { factoryContractAddrs, storageContractAddrs } = useContractAddresses();
 
   const closeAlertModal = () => {
     setAlertModalOpen(false);

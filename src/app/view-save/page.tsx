@@ -14,7 +14,8 @@ import Link from "next/link";
 import { useAccount, useReadContract } from "wagmi";
 import { DigitsaveAcctAbi } from "@/abis/DigitsaveAccountAbi";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
-import { assetsArray, factoryContractAddrs } from "@/constants";
+import { assetsArray } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { ethers } from "ethers";
 import { getEthersProvider } from "@/ethersProvider";
 import { config } from "@/wagmi";
@@ -46,6 +47,7 @@ type Save = {
 };
 
 export default function ViewSave() {
+  const { factoryContractAddrs } = useContractAddresses();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const dateCreated = parseInt(searchParams.get("datecreated") as string);

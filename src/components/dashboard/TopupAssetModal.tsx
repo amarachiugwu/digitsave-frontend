@@ -1,10 +1,6 @@
 import { StorageContractAbi } from "@/abis/StorageContractAbi";
-import {
-  assetsArray,
-  assetsDetails,
-  factoryContractAddrs,
-  storageContractAddrs,
-} from "@/constants";
+import { assetsArray, assetsDetails } from "@/constants";
+import { useContractAddresses } from "@/constants/index";
 import { getEthersProvider } from "@/ethersProvider";
 import { config } from "@/wagmi";
 import { ethers } from "ethers";
@@ -36,6 +32,7 @@ const TopupAssetModal: React.FC<TopupAssetModalProps> = ({
   savingId,
   assetId: _assetId,
 }) => {
+  const { factoryContractAddrs, storageContractAddrs } = useContractAddresses();
   const { chainId, address } = useAccount();
   const [selectedAsset, setSelectedAsset] = useState<FullAsset>();
   const [inputValue, setInputValue] = useState<number | string>(0);

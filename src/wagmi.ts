@@ -1,5 +1,5 @@
 import { http, createConfig } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
+import { baseSepolia, liskSepolia } from 'wagmi/chains';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {coinbaseWallet} from '@rainbow-me/rainbowkit/wallets';
 
@@ -19,9 +19,7 @@ const connectors = connectorsForWallets(
 
 
 export const config = createConfig({
-  chains: process.env.NODE_ENV === 'development' ? 
-  [baseSepolia] : 
-  process.env.NODE_ENV === 'production' ? [baseSepolia] : [base, baseSepolia],
+  chains:  [liskSepolia, baseSepolia],
   
 
   
@@ -29,8 +27,9 @@ export const config = createConfig({
 
   ssr: true,
   transports: {
+    [liskSepolia.id]: http(),
     [baseSepolia.id]: http(),
-    [base.id]: http(),
+
   },
 })
 

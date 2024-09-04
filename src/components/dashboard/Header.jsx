@@ -58,7 +58,7 @@ export default function Header({ navOpen, setNavOpen }) {
             />
           </Link>
           <div className="flex gap-4">
-            <ConnectButton showBalance={false} />
+            <ConnectButton showBalance={false} chainStatus={'icon'}  />
             <button className="lg:hidden" onClick={() => setNavOpen(!navOpen)}>
               {navOpen ? <CloseIcon /> : <HamburgerIcon />}
             </button>
