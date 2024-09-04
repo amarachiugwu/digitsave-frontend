@@ -20,13 +20,9 @@ import {
   WalletIconPlain,
 } from "@/icon";
 import { isValidAddress } from "@/utils/validateAddress";
-import OverviewLoader from "@/components/dashboard/Loaders/OverviewLoader";
-import { toRelativeTime, toFormattedDate } from "@/utils/dateFormat";
+import FullPageLoader from "@/components/dashboard/Loaders/FullPageLoader";
+import { toFormattedDate } from "@/utils/dateFormat";
 import ActivityLoader from "@/components/dashboard/Loaders/ActivityLoader";
-import Balances from "@/components/dashboard/Balances";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import GuestLayout from "@/components/dashboard/GuestLayout";
-import Assets from "@/components/dashboard/Assets";
 import { useQuery } from "urql";
 import { activitiesQuery } from "@/queries/activitiesQuery";
 import { DigitsaveAcctAbi } from "@/abis/DigitsaveAccountAbi";
@@ -223,7 +219,7 @@ export default function Activities() {
           </GuestLayout>
         )} */}
 
-        {isLoading && isConnected && <ActivityLoader />}
+        {isLoading && isConnected && <FullPageLoader />}
 
         {error && isConnected && (
           <div className="flex w-4/5 flex-col my-auto text-center gap-6">
@@ -251,7 +247,7 @@ export default function Activities() {
               <div className="flex gap-4 w-full">
                 <div className="w-full flex flex-col gap-4">
                   <div className="w-full flex flex-col  rounded-lg  ">
-                    {fetching && <ActivityLoader />}
+                    {fetching && <FullPageLoader />}
 
                     {!activitiesData && !fetching && (
                       <div className="p-6 w-full">
