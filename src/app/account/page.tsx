@@ -39,8 +39,19 @@ import Web3 from "web3";
 import { getWeb3Provider } from "@/web3jsProvider";
 import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
 import { NumericFormat } from "react-number-format";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
+  const router = useRouter();
+
+  const { isDisconnected } = useAccount();
+
+  useEffect(() => {
+    if (isDisconnected) {
+      router.push("/dashboard");
+    }
+  }, [isDisconnected, router]);
+
   const { factoryContractAddrs } = useContractAddresses();
   const { address, isConnected, chainId } = useAccount();
   const [savings, setSavings] = useState<any[]>([]);

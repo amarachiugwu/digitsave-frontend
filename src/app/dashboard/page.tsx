@@ -10,7 +10,7 @@ import {
   useSimulateContract,
   useReadContract,
 } from "wagmi";
-import { useContractAddresses } from "@/constants/index";
+import { useChainUrl, useContractAddresses } from "@/constants/index";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import { Circle, FileIcon, WalletIconPlain } from "@/icon";
 import { isValidAddress } from "@/utils/validateAddress";
@@ -35,6 +35,7 @@ import { NumericFormat } from "react-number-format";
 import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
 
 export default function Dashboard() {
+  const { chainUrl } = useChainUrl();
   const { factoryContractAddrs } = useContractAddresses();
   const { address, isConnected, chainId } = useAccount();
   const [savings, setSavings] = useState<any[]>([]);
@@ -382,15 +383,7 @@ export default function Dashboard() {
                             <tr className="hover:bg-tertiary-4 transition-all ease-in-out py-[23px]">
                               {/* <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`https://${
-                                    process.env.NODE_ENV === "development"
-                                      ? "sepolia.basescan.org"
-                                      : process.env.NODE_ENV === "production"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                  }/address/${
+                                  href={`https://${chainUrl}/address/${
                                     activitiesData.savingsContractCreateds[0]
                                       .savingsContract
                                   }`}
@@ -402,18 +395,7 @@ export default function Dashboard() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`https://${
-                                    process.env.NODE_ENV === "development"
-                                      ? "sepolia.basescan.org"
-                                      : process.env.NODE_ENV === "production"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                  }/address/${
-                                    activitiesData.savingsContractCreateds[0]
-                                      .savingsContract
-                                  }`}
+                                  href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   <div className="flex flex-grow gap-4">
@@ -429,38 +411,16 @@ export default function Dashboard() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`https://${
-                                    process.env.NODE_ENV === "development"
-                                      ? "sepolia.basescan.org"
-                                      : process.env.NODE_ENV === "production"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                  }/address/${
-                                    activitiesData.savingsContractCreateds[0]
-                                      .savingsContract
-                                  }`}
+                                  href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
-                                  ----
+                                  -
                                 </Link>
                               </td>
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`https://${
-                                    process.env.NODE_ENV === "development"
-                                      ? "sepolia.basescan.org"
-                                      : process.env.NODE_ENV === "production"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                  }/address/${
-                                    activitiesData.savingsContractCreateds[0]
-                                      .savingsContract
-                                  }`}
+                                  href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   <div className="flex flex-grow gap-2 py-1 px-3 items-center justify-center bg-tertiary-7 rounded-xl">
@@ -472,38 +432,16 @@ export default function Dashboard() {
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`https://${
-                                    process.env.NODE_ENV === "development"
-                                      ? "sepolia.basescan.org"
-                                      : process.env.NODE_ENV === "production"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                  }/address/${
-                                    activitiesData.savingsContractCreateds[0]
-                                      .savingsContract
-                                  }`}
+                                  href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
-                                  ----
+                                  -
                                 </Link>
                               </td>
 
                               <td className="border-b border-tertiary-5 text-center">
                                 <Link
-                                  href={`https://${
-                                    process.env.NODE_ENV === "development"
-                                      ? "sepolia.basescan.org"
-                                      : process.env.NODE_ENV === "production"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                      ? "basescan.org"
-                                      : "sepolia.basescan.org"
-                                  }/address/${
-                                    activitiesData.savingsContractCreateds[0]
-                                      .savingsContract
-                                  }`}
+                                  href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                   className="inline-block px-2 py-[23px] w-full"
                                 >
                                   {toFormattedDate(

@@ -31,6 +31,21 @@ export const useContractAddresses = (): ContractAddresses => {
   };
 
 
+  export const useChainUrl = (): {chainUrl:string} => {
+    const chainId = useChainId();
+  
+    const chainUrl: string =
+      chainId === 84532
+        ? "sepolia.basescan.org"
+        : chainId === 4202
+        ? "testnet-service.lisk.com"
+        : "testnet-service.lisk.com";
+  
+  
+    return {chainUrl};
+  };
+
+
 export interface AssetsArray {
     [key: number]: Asset[];
 }

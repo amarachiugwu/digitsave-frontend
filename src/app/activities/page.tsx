@@ -10,7 +10,7 @@ import {
   useSimulateContract,
   useReadContract,
 } from "wagmi";
-import { useContractAddresses } from "@/constants/index";
+import { useChainUrl, useContractAddresses } from "@/constants/index";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import {
   Circle,
@@ -35,8 +35,19 @@ import Web3 from "web3";
 import { getWeb3Provider } from "@/web3jsProvider";
 import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
 import { NumericFormat } from "react-number-format";
+import { useRouter } from "next/navigation";
 
 export default function Activities() {
+  const router = useRouter();
+
+  const { isDisconnected } = useAccount();
+
+  useEffect(() => {
+    if (isDisconnected) {
+      router.push("/dashboard");
+    }
+  }, [isDisconnected, router]);
+  const { chainUrl } = useChainUrl();
   const { factoryContractAddrs } = useContractAddresses();
   const { address, isConnected, chainId } = useAccount();
   const [savings, setSavings] = useState<any[]>([]);
@@ -422,18 +433,7 @@ export default function Activities() {
                               <tr className="hover:bg-tertiary-4 transition-all ease-in-out py-[23px]">
                                 <td className="border-b border-tertiary-5 text-center">
                                   <Link
-                                    href={`https://${
-                                      process.env.NODE_ENV === "development"
-                                        ? "sepolia.basescan.org"
-                                        : process.env.NODE_ENV === "production"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                    }/address/${
-                                      activitiesData.savingsContractCreateds[0]
-                                        .savingsContract
-                                    }`}
+                                    href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                     className="inline-block px-2 py-[23px] w-full"
                                   >
                                     #{savings.length + 1}
@@ -442,18 +442,7 @@ export default function Activities() {
 
                                 <td className="border-b border-tertiary-5 text-center">
                                   <Link
-                                    href={`https://${
-                                      process.env.NODE_ENV === "development"
-                                        ? "sepolia.basescan.org"
-                                        : process.env.NODE_ENV === "production"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                    }/address/${
-                                      activitiesData.savingsContractCreateds[0]
-                                        .savingsContract
-                                    }`}
+                                    href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                     className="inline-block px-2 py-[23px] w-full"
                                   >
                                     <div className="flex flex-grow gap-4">
@@ -469,18 +458,7 @@ export default function Activities() {
 
                                 <td className="border-b border-tertiary-5 text-center">
                                   <Link
-                                    href={`https://${
-                                      process.env.NODE_ENV === "development"
-                                        ? "sepolia.basescan.org"
-                                        : process.env.NODE_ENV === "production"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                    }/address/${
-                                      activitiesData.savingsContractCreateds[0]
-                                        .savingsContract
-                                    }`}
+                                    href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                     className="inline-block px-2 py-[23px] w-full"
                                   >
                                     ----
@@ -489,18 +467,7 @@ export default function Activities() {
 
                                 <td className="border-b border-tertiary-5 text-center">
                                   <Link
-                                    href={`https://${
-                                      process.env.NODE_ENV === "development"
-                                        ? "sepolia.basescan.org"
-                                        : process.env.NODE_ENV === "production"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                    }/address/${
-                                      activitiesData.savingsContractCreateds[0]
-                                        .savingsContract
-                                    }`}
+                                    href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                     className="inline-block px-2 py-[23px] w-full"
                                   >
                                     <div className="flex flex-grow gap-2 py-1 px-3 items-center justify-center bg-tertiary-7 rounded-xl">
@@ -512,18 +479,7 @@ export default function Activities() {
 
                                 <td className="border-b border-tertiary-5 text-center">
                                   <Link
-                                    href={`https://${
-                                      process.env.NODE_ENV === "development"
-                                        ? "sepolia.basescan.org"
-                                        : process.env.NODE_ENV === "production"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                    }/address/${
-                                      activitiesData.savingsContractCreateds[0]
-                                        .savingsContract
-                                    }`}
+                                    href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                     className="inline-block px-2 py-[23px] w-full"
                                   >
                                     ----
@@ -532,18 +488,7 @@ export default function Activities() {
 
                                 <td className="border-b border-tertiary-5 text-center">
                                   <Link
-                                    href={`https://${
-                                      process.env.NODE_ENV === "development"
-                                        ? "sepolia.basescan.org"
-                                        : process.env.NODE_ENV === "production"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                        ? "basescan.org"
-                                        : "sepolia.basescan.org"
-                                    }/address/${
-                                      activitiesData.savingsContractCreateds[0]
-                                        .savingsContract
-                                    }`}
+                                    href={`https://${chainUrl}/address/${activitiesData.savingsContractCreateds[0].savingsContract}`}
                                     className="inline-block px-2 py-[23px] w-full"
                                   >
                                     {toFormattedDate(
@@ -571,10 +516,10 @@ export default function Activities() {
             </div>
 
             <p className="text-neutral-3 text-xl font-medium">
-              No savings Account found
+              No Activities yet
             </p>
             <p className="mx-auto text-neutral-6 w-2/5">
-              You don’t have a savings account yet.
+              Your activities will appear here, once you create account.
             </p>
             <button
               className={`mx-auto mt-10 flex gap-2 items-center font-semibold  justify-center rounded-md bg-primary-0 text-white  py-4 px-12 ${
