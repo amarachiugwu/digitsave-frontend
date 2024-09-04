@@ -56,6 +56,16 @@ export default function Header() {
               </Link>
 
               <ScrollLink
+                to="roadmap"
+                spy={true}
+                smooth={true}
+                duration={500}
+                className="cursor-pointer hover:text-white transition-colors duration-300"
+              >
+                Roadmap
+              </ScrollLink>
+
+              <ScrollLink
                 to="faq"
                 spy={true}
                 smooth={true}
@@ -125,6 +135,16 @@ export default function Header() {
                 >
                   Learn
                 </Link>
+
+                <ScrollLink
+                  to="roadmap"
+                  spy={true}
+                  smooth={true}
+                  duration={500}
+                  className="cursor-pointer hover:text-white  hover:bg-[#2B2B2B4D] py-4 px-4 transition-colors duration-300"
+                >
+                  Roadmap
+                </ScrollLink>
 
                 <ScrollLink
                   to="faq"

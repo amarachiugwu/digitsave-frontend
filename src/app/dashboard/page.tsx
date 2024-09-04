@@ -240,12 +240,12 @@ export default function Dashboard() {
             <Balances />
 
             {/* history and token */}
-            <section className="w-full m-h-screen w-4/4 px-6 py-10">
+            <section className="w-full m-h-screen w-4/4   px-6 py-10">
               <div className="flex gap-4 w-full">
                 <div className="w-3/5 flex flex-col gap-4">
                   <p className="font-semibold">Recent activities</p>
 
-                  <div className="w-full flex flex-col overflow-scroll rounded-lg bg-tertiary-6 h-[350px]">
+                  <div className="w-full flex flex-col overflow-y-scroll rounded-lg bg-[#1B1B1B] h-[350px]">
                     {fetching && <ActivityLoader />}
 
                     {!activitiesData && !fetching && (
@@ -281,7 +281,7 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                    <table className="min-w-full bg-[#1B1B1B] border border-tertiary-5">
+                    <table className="min-w-full bg-[#1B1B1B] border-b border-tertiary-5">
                       <thead className=""></thead>
                       <tbody>
                         {loading && <SavingListLoader />}

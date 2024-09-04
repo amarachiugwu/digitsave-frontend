@@ -18,45 +18,75 @@ const roadmapData: RoadmapItem[] = [
     date: "AUGUST 2024",
     title: "Idea Generation",
     description:
-      "Build flexible savings portfolios and maximize crypto assets to meet your financial goals.",
-    tasks: ["Home page design", "Dashboard design", "Icon page design"],
+      "Refined the savings Dapp idea, formed a strong team, sectioned the dapp development",
+    tasks: [
+      "Refined the Idea",
+      "Sorted for individuals with needed skils",
+      "Formed a strong team",
+      "Defined an MVP",
+      "Defined a roadmap",
+      "Started Wireframing",
+    ],
   },
   {
     date: "SEPTEMBER 2024",
-    title: "Savings Options",
-    description:
-      "We provide a transparent, secure, customised and flexible savings system, which supports multiple crypto assets.",
-    tasks: ["Home page design", "Dashboard design", "Dashboard design"],
+    title: "MVP Development",
+    description: "MVP desing and implementation",
+    tasks: [
+      "UI/UX Design commerced",
+      "UI Implemetatation",
+      "Landing Page Designed",
+      "Create Savings Account",
+      "Create Savings",
+      "Add crypto assets to save",
+      "Top up assets",
+      "Withdraw single asset, withdraw all assets",
+    ],
   },
   {
     date: "OCTOBER 2024",
     title: "Borrowing out to compound finance",
     description:
-      "We provide a transparent, secure, customised and flexible savings system, which supports multiple crypto assets.",
-    tasks: ["Home page design", "Home page design", "Home page design"],
+      "Your money dont have to be idle, even while saving, we plan to integrate borrowing out you locked asset to compound finance, so that your saving can work for you even while locked",
+    tasks: [
+      "Integrate borrowing to compound finance",
+      "Earn intrest on your borrowings",
+      "Accumulate profits in your intrest balance",
+      "withdraw your earnings",
+    ],
   },
   {
     date: "NOVEMBER 2024",
     title: "Liquidation Protection",
     description:
-      "We provide a transparent, secure, customised and flexible savings system, which supports multiple crypto assets.",
-    tasks: ["Home page design", "Home page design", "Home page design"],
+      "Since we encourage and give users liberty to save in cryto assets, which can rise and fall, we plan on integrating a liqudation protection system, so users can stay proof of the falling market days",
+    tasks: [
+      "Track market movement for all supported assets",
+      "Implement converting users assets to stable coin to protect asset value",
+      "Change back users asset to original crypto when market gets bullish",
+      "Home page design",
+    ],
   },
   {
     date: "Q1 2025",
-    title: "ICO & Rewards systems",
-    description:
-      "We provide a transparent, secure, customised and flexible savings system, which supports multiple crypto assets.",
-    tasks: ["Home page design", "Home page design", "Home page design"],
+    title: "More Blockchain and Assets, Reward System",
+    description: "Support saving in more asset, and more support blockchain",
+    tasks: [
+      "Increase supported assets",
+      "Increase supported blockchain",
+      "Perform and ICO (still in comtemplation)",
+      "Build a referal system (still in comtemplation)",
+    ],
   },
 ];
 
 const Roadmap: React.FC = () => {
   return (
     <div className="flex flex-col items-center  text-neutral-3 pb-10 ">
-      <p className="text-center mb-8 text-xl md:text-base ">
-        Build flexible savings portfolios and maximize crypto assets to meet
-        your financial goals
+      <p className="text-center mb-8 text-xl md:text-base lg:w-[70%] ">
+        Here's our roadmap for building the Savings dApp, designed to help you
+        securely lock your crypto and stay on track with your wealth-building
+        goals.
       </p>
 
       {roadmapData.map((item, index) => (
