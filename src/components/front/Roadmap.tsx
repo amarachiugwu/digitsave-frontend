@@ -84,9 +84,9 @@ const Roadmap: React.FC = () => {
   return (
     <div className="flex flex-col items-center  text-neutral-3 pb-10 ">
       <p className="text-center mb-8 text-xl md:text-base lg:w-[70%] ">
-        Here's our roadmap for building the Savings dApp, designed to help you
-        securely lock your crypto and stay on track with your wealth-building
-        goals.
+        Here&apos;s our roadmap for building the Savings dApp, designed to help
+        you securely lock your crypto and stay on track with your
+        wealth-building goals.
       </p>
 
       {roadmapData.map((item, index) => (
