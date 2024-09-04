@@ -1,24 +1,10 @@
+import { Asset } from "@/@types/assets.types";
+
 export const factoryContractAddrs = '0xc6Bb6bD945Af880fab19B5fbaC0D8e42a8942E12'
 export const storageContractAddrs = '0xFD0D395CA4E8b22f657F55e635F4D27D987BeFC0'
 export const digitsafeAcctContractAddrs = '0x00C8F042163F224d360D38875f81BD46beab6284'
 
-export interface Asset {
-    name: string;
-    ticker: string;
-    decimal: number;
-    fullName: string;
-    contractAddrs: string;
-  }
 
-  // Type for the second object
-export interface AssetDetail {
-    name: string;
-    ticker: string;
-    decimal: number;
-    fullName: string;
-  }
-  
-  
 export interface AssetsArray {
     [key: number]: Asset[];
 }
