@@ -31,6 +31,8 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Web3 from "web3";
 import { getWeb3Provider } from "@/web3jsProvider";
+import { NumericFormat } from "react-number-format";
+import SavingListLoader from "@/components/dashboard/Loaders/SavingListLoader";
 
 export default function Dashboard() {
   const { address, isConnected, chainId } = useAccount();
@@ -279,106 +281,240 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                    {savings.reverse().map((saving, index) => (
-                      <div key={index} className="text-sm p-6">
-                        <div className="flex flex-col gap-6">
-                          <div className="flex gap-4 justify-between items-center">
-                            <div className="flex flex-grow gap-4">
-                              <WalletIconPlain />
-                              <div className="flex flex-col gap-1 ">
-                                <p>
-                                  <b>
-                                    {/* {ethers.utils.parseBytes32String(
+                    <table className="min-w-full bg-[#1B1B1B] border border-tertiary-5">
+                      <thead className=""></thead>
+                      <tbody>
+                        {loading && <SavingListLoader />}
+
+                        {savings.map((saving, index) => (
+                          <tr
+                            key={index}
+                            className="hover:bg-tertiary-4 transition-all ease-in-out py-[23px]"
+                          >
+                            {/* <td className="border-b border-tertiary-5 text-center">
+                              <Link
+                                href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
+                                className="inline-block px-2 py-[23px] w-full"
+                              >
+                                #{index + 1}
+                              </Link>
+                            </td> */}
+
+                            <td className="border-b border-tertiary-5 text-center">
+                              <Link
+                                href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
+                                className="inline-block px-2 py-[23px] w-full"
+                              >
+                                <div className="flex flex-grow gap-4">
+                                  <WalletIconPlain />
+                                  <div className="flex flex-col gap-1 ">
+                                    <p>
+                                      <b>
+                                        {/* {ethers.utils.parseBytes32String(
                                       saving.name
                                     )} */}
-                                    {Web3.utils.hexToUtf8(saving.name)}
-                                  </b>{" "}
-                                  Save created
-                                </p>
-                                <p className="text-xs">
-                                  Lock period due{" "}
-                                  {toRelativeTime(saving.lockPeriod)}
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="flex flex-grow gap-2 py-1 px-3 items-center bg-tertiary-7 rounded-xl">
-                              <Circle />
-                              <p>Successful</p>
-                            </div>
-
-                            <Link
-                              href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
-                              className="block flex-grow "
-                            >
-                              manage
-                            </Link>
-
-                            {saving.date && (
-                              <p className="flex-grow ">
-                                {toFormattedDate(
-                                  parseInt(
-                                    `${ethers.BigNumber.from(saving.date)}`
-                                  )
-                                )}
-                                {/* {toFormattedDate(saving.date)} */}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    {activitiesData !== undefined &&
-                      activitiesData.savingsContractCreateds[0] && (
-                        <div className="text-sm p-6">
-                          <div className="flex flex-col gap-6">
-                            <div className="flex gap-8 justify-between items-center">
-                              <div className="flex gap-4">
-                                <WalletIconPlain />
-                                <div className="flex flex-col gap-1 ">
-                                  <p>Savings account credited</p>
-                                  <p className="text-xs">
-                                    {toRelativeTime(
-                                      activitiesData.savingsContractCreateds[0]
-                                        .date
-                                    )}
-                                  </p>
+                                        {Web3.utils.hexToUtf8(saving.name)}
+                                      </b>{" "}
+                                      Save created
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
+                              </Link>
+                            </td>
 
-                              <div className="flex gap-2 py-1 px-3 items-center bg-tertiary-7 rounded-xl">
-                                <Circle />
-                                <p>Successful</p>
-                              </div>
-
-                              <a
-                                href={`https://${
-                                  process.env.NODE_ENV === "development"
-                                    ? "sepolia.basescan.org"
-                                    : process.env.NODE_ENV === "production"
-                                    ? "basescan.org"
-                                    : "sepolia.basescan.org"
-                                    ? "basescan.org"
-                                    : "sepolia.basescan.org"
-                                }/address/${
-                                  activitiesData.savingsContractCreateds[0]
-                                    .savingsContract
-                                }`}
-                                target="_blank"
+                            <td className="border-b border-tertiary-5 text-center">
+                              <Link
+                                href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
+                                className="inline-block px-2 py-[23px] w-full"
                               >
-                                view
-                              </a>
+                                $
+                                <NumericFormat
+                                  thousandSeparator
+                                  displayType="text"
+                                  value={web3.utils.fromWei(
+                                    saving.totalDepositInUSD,
+                                    "ether"
+                                  )}
+                                  decimalScale={2}
+                                  fixedDecimalScale={
+                                    saving.totalDepositInUSD % 1 === 0
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </Link>
+                            </td>
 
-                              <p>
-                                {toFormattedDate(
-                                  activitiesData.savingsContractCreateds[0].date
-                                )}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                            <td className="border-b border-tertiary-5 text-center">
+                              <Link
+                                href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
+                                className="inline-block px-2 py-[23px] w-full"
+                              >
+                                <div className="flex flex-grow gap-2 py-1 px-3 items-center justify-center bg-tertiary-7 rounded-xl">
+                                  <Circle />
+                                  <p>Successful</p>
+                                </div>
+                              </Link>
+                            </td>
+
+                            <td className="border-b border-tertiary-5 text-center">
+                              <Link
+                                href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
+                                className="inline-block px-2 py-[23px] w-full"
+                              >
+                                Fixed
+                              </Link>
+                            </td>
+
+                            <td className="border-b border-tertiary-5 text-center">
+                              <Link
+                                href={`/view-save?id=${saving.id}&datecreated=${saving.date}&period=${saving.lockPeriod}`}
+                                className="inline-block px-2 py-[23px] w-full"
+                              >
+                                {toFormattedDate(saving.date)}
+                              </Link>
+                            </td>
+                          </tr>
+                        ))}
+                        {activitiesData !== undefined &&
+                          activitiesData.savingsContractCreateds[0] && (
+                            <tr className="hover:bg-tertiary-4 transition-all ease-in-out py-[23px]">
+                              {/* <td className="border-b border-tertiary-5 text-center">
+                                <Link
+                                  href={`https://${
+                                    process.env.NODE_ENV === "development"
+                                      ? "sepolia.basescan.org"
+                                      : process.env.NODE_ENV === "production"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                  }/address/${
+                                    activitiesData.savingsContractCreateds[0]
+                                      .savingsContract
+                                  }`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
+                                  #{savings.length + 1}
+                                </Link>
+                              </td> */}
+
+                              <td className="border-b border-tertiary-5 text-center">
+                                <Link
+                                  href={`https://${
+                                    process.env.NODE_ENV === "development"
+                                      ? "sepolia.basescan.org"
+                                      : process.env.NODE_ENV === "production"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                  }/address/${
+                                    activitiesData.savingsContractCreateds[0]
+                                      .savingsContract
+                                  }`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
+                                  <div className="flex flex-grow gap-4">
+                                    <WalletIconPlain />
+                                    <div className="flex flex-col gap-1 ">
+                                      <p>
+                                        <b>Savings account created</b>{" "}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </td>
+
+                              <td className="border-b border-tertiary-5 text-center">
+                                <Link
+                                  href={`https://${
+                                    process.env.NODE_ENV === "development"
+                                      ? "sepolia.basescan.org"
+                                      : process.env.NODE_ENV === "production"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                  }/address/${
+                                    activitiesData.savingsContractCreateds[0]
+                                      .savingsContract
+                                  }`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
+                                  ----
+                                </Link>
+                              </td>
+
+                              <td className="border-b border-tertiary-5 text-center">
+                                <Link
+                                  href={`https://${
+                                    process.env.NODE_ENV === "development"
+                                      ? "sepolia.basescan.org"
+                                      : process.env.NODE_ENV === "production"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                  }/address/${
+                                    activitiesData.savingsContractCreateds[0]
+                                      .savingsContract
+                                  }`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
+                                  <div className="flex flex-grow gap-2 py-1 px-3 items-center justify-center bg-tertiary-7 rounded-xl">
+                                    <Circle />
+                                    <p>Successful</p>
+                                  </div>
+                                </Link>
+                              </td>
+
+                              <td className="border-b border-tertiary-5 text-center">
+                                <Link
+                                  href={`https://${
+                                    process.env.NODE_ENV === "development"
+                                      ? "sepolia.basescan.org"
+                                      : process.env.NODE_ENV === "production"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                  }/address/${
+                                    activitiesData.savingsContractCreateds[0]
+                                      .savingsContract
+                                  }`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
+                                  ----
+                                </Link>
+                              </td>
+
+                              <td className="border-b border-tertiary-5 text-center">
+                                <Link
+                                  href={`https://${
+                                    process.env.NODE_ENV === "development"
+                                      ? "sepolia.basescan.org"
+                                      : process.env.NODE_ENV === "production"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                      ? "basescan.org"
+                                      : "sepolia.basescan.org"
+                                  }/address/${
+                                    activitiesData.savingsContractCreateds[0]
+                                      .savingsContract
+                                  }`}
+                                  className="inline-block px-2 py-[23px] w-full"
+                                >
+                                  {toFormattedDate(
+                                    activitiesData.savingsContractCreateds[0]
+                                      .date
+                                  )}{" "}
+                                </Link>
+                              </td>
+                            </tr>
+                          )}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
 
