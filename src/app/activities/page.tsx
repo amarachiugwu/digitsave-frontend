@@ -525,7 +525,7 @@ export default function Activities() {
                                     }`}
                                     className="inline-block px-2 py-[23px] w-full"
                                   >
-                                    -----
+                                    ----
                                   </Link>
                                 </td>
 
