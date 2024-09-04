@@ -3,12 +3,14 @@ import { factoryContractAddrs } from "@/constants";
 import { config } from '@/wagmi'
 import { getEthersProvider } from '@/ethersProvider'
 import { ethers } from 'ethers';
+import Web3 from "web3";
 
 
  
 
 export async function FetchSavingsContractCreatedEvent(userAddress) {
     const provider = getEthersProvider(config)
+    const web3 = new Web3();
 
 
     

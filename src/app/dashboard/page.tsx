@@ -29,6 +29,8 @@ import { config } from "@/wagmi";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import Web3 from "web3";
+import { getWeb3Provider } from "@/web3jsProvider";
 
 export default function Dashboard() {
   const { address, isConnected, chainId } = useAccount();
@@ -36,13 +38,16 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [nextSavingId, setNextSavingId] = useState<number | null>(null);
   const provider = getEthersProvider(config);
-  const [navOpen, setNavOpen] = useState(false);
+  // const provider = getWeb3Provider(config);
 
+  const [navOpen, setNavOpen] = useState(false);
   const activities = activitiesQuery(address);
   const [result, reexecuteQuery] = useQuery({
     query: activities,
     pause: address == undefined,
   });
+
+  const web3 = new Web3();
 
   const refreshActivities = () => {
     // Refetch the query and skip the cache
@@ -283,17 +288,10 @@ export default function Dashboard() {
                               <div className="flex flex-col gap-1 ">
                                 <p>
                                   <b>
-                                    {ethers.utils.parseBytes32String(
+                                    {/* {ethers.utils.parseBytes32String(
                                       saving.name
-                                    )}
-                                  </b>{" "}
-                                  Save created
-                                </p>
-                                <p>
-                                  <b>
-                                    {ethers.utils.parseBytes32String(
-                                      saving.name
-                                    )}
+                                    )} */}
+                                    {Web3.utils.hexToUtf8(saving.name)}
                                   </b>{" "}
                                   Save created
                                 </p>
@@ -323,6 +321,7 @@ export default function Dashboard() {
                                     `${ethers.BigNumber.from(saving.date)}`
                                   )
                                 )}
+                                {/* {toFormattedDate(saving.date)} */}
                               </p>
                             )}
                           </div>

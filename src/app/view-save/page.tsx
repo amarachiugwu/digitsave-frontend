@@ -31,6 +31,7 @@ import { BigNumber } from "ethers";
 import Image from "next/image";
 import { CombinedAsset } from "@/@types/assets.types";
 import TopupAssetModal from "@/components/dashboard/TopupAssetModal";
+import Web3 from "web3";
 
 type Save = {
   id: number;
@@ -73,6 +74,7 @@ export default function ViewSave() {
   };
 
   useEffect(() => {}, [isModalOpen]);
+  const web3 = new Web3();
 
   // fetch users contract >> savings account
   const {
@@ -137,7 +139,7 @@ export default function ViewSave() {
                 lockPeriod: savingData.lockPeriod,
                 isCompleted: savingData.isCompleted,
                 name: savingData.name,
-                date: 1723658675,
+                date: 1725412179,
                 assets: combinedAssetData,
               };
             })()
@@ -183,7 +185,8 @@ export default function ViewSave() {
               This saving is for{" "}
               {saving[0]?.name && (
                 <b className="text-neutral-1">
-                  {ethers.utils.parseBytes32String(saving[0]?.name)}
+                  {/* {ethers.utils.parseBytes32String(saving[0]?.name)} */}
+                  {Web3.utils.hexToUtf8(saving[0]?.name)}
                 </b>
               )}{" "}
               save only
@@ -210,7 +213,7 @@ export default function ViewSave() {
                       <div className="flex">
                         <div className="flex gap-2">
                           <LockIcon />
-                          <span className="">savings Balance</span>
+                          <span className="">Savings Balance</span>
                         </div>
                       </div>
 
@@ -219,8 +222,9 @@ export default function ViewSave() {
                         <NumericFormat
                           thousandSeparator
                           displayType="text"
-                          value={ethers.utils.formatUnits(
-                            saving[0]?.totalDepositInUSD
+                          value={web3.utils.fromWei(
+                            saving[0]?.totalDepositInUSD,
+                            "ether"
                           )}
                           decimalScale={2}
                           fixedDecimalScale={

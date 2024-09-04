@@ -10,14 +10,16 @@ import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import { factoryContractAddrs } from "@/constants";
 import { ethers } from "ethers";
 import { NumericFormat } from "react-number-format";
+import Web3 from "web3";
 
 export default function Balances() {
-//   const pathname = usePathname();
+  //   const pathname = usePathname();
   const { address, chainId } = useAccount();
   const [totalAmountInUsd, setTotalAmountInUsd] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [nextSavingId, setNextSavingId] = useState<number | null>(null);
   const provider = getEthersProvider(config);
+  const web3 = new Web3();
 
   // fetch users contract >> savings account
   const {
@@ -66,7 +68,8 @@ export default function Balances() {
 
             // Convert BigNumber to a number, assuming 18 decimal places
             const totalDepositInUSD = parseFloat(
-              ethers.utils.formatUnits(savingData.totalDepositInUSD, 18)
+              // ethers.utils.formatUnits(savingData.totalDepositInUSD, 18)
+              web3.utils.fromWei(savingData.totalDepositInUSD.toString(), 18)
             );
             cumulativeTotal += totalDepositInUSD;
           }
@@ -115,12 +118,12 @@ export default function Balances() {
             )} */}
 
             {/* {pathname == "/save" && ( */}
-              <Link
-                href="/create-save"
-                className={`flex gap-2 items-center justify-center rounded-lg bg-secondry-6 text-tertiary-7 font-semibold w-44 py-2 px-5 `}
-              >
-                create saving
-              </Link>
+            <Link
+              href="/create-save"
+              className={`flex gap-2 items-center justify-center rounded-lg bg-secondry-6 text-tertiary-7 font-semibold w-44 py-2 px-5 `}
+            >
+              create saving
+            </Link>
             {/* )} */}
           </div>
         </div>

@@ -14,6 +14,7 @@ import { BaseError, useReadContract } from "wagmi";
 import { useAccount } from "wagmi";
 import AssetsLoader from "./Loaders/AssetsLoader";
 import { erc20Abi } from "@/abis/erc20Abi";
+import Web3 from "web3";
 import { useWriteContract } from "wagmi";
 import { FactoryAbi } from "@/abis/FactoryContractAbi";
 import { DigitsaveAcctAbi } from "@/abis/DigitsaveAccountAbi";
@@ -49,6 +50,7 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
   const savingIdBigNumber = BigNumber.from(savingId);
   const [isAlertModalOpen, setAlertModalOpen] = useState(true);
   const [isTrackModalOpen, setTrackModalOpen] = useState(false);
+  const web3 = new Web3();
 
   const closeAlertModal = () => {
     setAlertModalOpen(false);
@@ -94,14 +96,22 @@ const AddAssetModal: React.FC<AddAssetModalProps> = ({
                   contract.decimals(),
                 ]);
 
-                const formatedBalance = ethers.utils.formatUnits(
-                  balance,
+                // const formatedBalance = ethers.utils.formatUnits(
+                //   balance,
+                //   decimals
+                // );
+                // const formatedPrice = ethers.utils.formatUnits(
+                //   assets[i].price,
+                //   decimals
+                // );
+                const formatedBalance = web3.utils.fromWei(
+                  balance.toString(),
                   decimals
-                );
-                const formatedPrice = ethers.utils.formatUnits(
-                  assets[i].price,
+                ); // For 18 decimals, adjust unit as necessary
+                const formatedPrice = web3.utils.fromWei(
+                  assets[i].price.toString(),
                   decimals
-                );
+                ); // Adjust the unit if decimals differ
 
                 return {
                   balance: formatedBalance,

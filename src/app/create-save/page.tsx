@@ -35,7 +35,7 @@ export default function CreateSave() {
           <section className="w-full m-h-screen w-4/4 px-6 py-10">
             <div className="flex flex-col rounded-md gap-4 w-full border border-tertiary-4">
               <h1 className="font-swiss text-2xl p-6 border-b border-tertiary-4 w-full">
-                Create safelock
+                Create Savings
               </h1>
 
               <div className="w-3/5 mx-auto py-6">
